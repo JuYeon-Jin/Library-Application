@@ -1,0 +1,204 @@
+/* 폰트 */
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+/* 기본 레이아웃 */
+/* body
+   > container
+     > header
+     > form-container
+       > form-box-small / form-box-large
+*/
+
+body {
+    font-family: Pretendard;
+    margin: 0;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    flex: 0 0 22%;
+    display: flex;
+    align-items: flex-end;
+
+    text-align: center;
+    font-size: 48px;
+    margin-bottom: 30px;
+}
+
+.form-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 8%;
+    gap: 16px;
+}
+
+.form-outline {
+    border: 5px solid #004B8E;
+    border-radius: 8px;
+
+    width: 840px;
+    height: 410px;
+
+    text-align: center;
+}
+
+.form-outline-small {
+    border-radius: 8px;
+    padding: 20px;
+    margin: 0 10px;
+
+    width: 450px;
+    height: 380px;
+
+    text-align: center;
+}
+
+.title {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-box-small {
+    border-radius: 8px;
+    border: 3px solid #004B8E;
+
+    width: 96%;
+    height: 70%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.input-box {
+    width: 85%;
+    display: flex;
+}
+
+.user-span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 31%;
+    font-size: 20px;
+}
+
+.user-input {
+    width: 56%;
+    height: 27px;
+}
+
+.user-input::placeholder {
+    font-family: Pretendard;
+    padding-left: 3px;
+}
+
+.form-box-small button,
+.big-btn {
+    color: white;
+    font-family: Pretendard;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    border: none;
+
+    margin-top: 16px;
+    border-radius: 10px;
+    background-color: #004B8E;
+}
+
+
+.form-box-small button {
+    width: 160px;
+    height: 28px;
+}
+
+.form-box-small button:hover {
+    background-color: #003366;
+}
+
+.form-box-small button:active {
+    background-color: #002147;
+}
+
+/*  추가  */
+
+nav {
+    background-color: #004B8E;
+    color: #fff;
+    padding: 11px 15px;
+    font-size: 14pt;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+}
+
+nav ul li a.active, nav ul li a:hover {
+    color: #ffd700;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center; /* 가로 정렬 */
+    align-items: center;     /* 세로 정렬 */
+    height: 90%;            /* 부모 컨테이너의 전체 높이 사용 */
+    width: 100%;
+}
+
+.book-input {
+    width: 300px;
+    height: 33px;
+    margin-left: 15px;
+    background-color: #E6E6E6;
+    border: none;
+}
+
+.book-label {
+    font-size: 17pt;
+    margin-left: -10px;
+}
+
+.big-btn {
+    margin-top: 32px;
+    width: 170px;
+    height: 31px;
+}
