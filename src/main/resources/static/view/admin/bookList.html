@@ -19,19 +19,23 @@
 
             <nav>
                 <ul>
-                    <li><a href="#" class="active">도서 등록</a></li>|
-                    <li><a href="#">도서 전체 목록</a></li>|
+                    <li><a href="#">도서 등록</a></li>|
+                    <li><a href="#" class="active">도서 전체 목록</a></li>|
                     <li><a href="#">유저 전체 목록</a></li>
                 </ul>
             </nav>
 
-            <form action="/book" method="post" class="content">
-                <div class="book-input-box">
-                    <div class="book-span"><label for="bookName">도서명</label></div>
-                    <input type="text" id="bookName" name="bookName" class="book-input">
+            <div class="content">
+                <div class="titles">
+                    제목줄
                 </div>
-                <button type="submit" class="book-btn">저장</button>
-            </form>
+                <div class="lists">
+                    내용줄
+                </div>
+                <div class="page">
+                    페이징
+                </div>
+            </div>
 
         </div><!-- large-container-outline -->
     </div><!-- main-container -->

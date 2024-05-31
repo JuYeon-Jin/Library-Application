@@ -6,15 +6,6 @@
     font-style: normal;
 }
 
-
-/* 기본 레이아웃 */
-/* body
-   > container
-     > header
-     > form-container
-       > form-box-small / form-box-large
-*/
-
 body {
     font-family: Pretendard;
     margin: 0;
