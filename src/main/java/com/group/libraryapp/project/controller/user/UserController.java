@@ -1,13 +1,13 @@
 package com.group.libraryapp.project.controller.user;
 
-import com.group.libraryapp.project.domain.user.User;
-import com.group.libraryapp.project.dto.request.UserRequest;
+import com.group.libraryapp.project.dto.user.request.UserRequest;
+import com.group.libraryapp.project.dto.user.response.UserResponse;
 import com.group.libraryapp.project.service.user.UserService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,7 +27,13 @@ public class UserController {
     // CREATE   * 회원 가입
     @PostMapping("/user")
     public void saveUser(@RequestBody UserRequest request) {
+        userService.saveUser(request);
+    }
 
+    // READ   * 회원 전체 목록 조회
+    @GetMapping("/user")
+    public List<UserResponse> getUsers() {
+        return userService.getUsers();
     }
 
     /*

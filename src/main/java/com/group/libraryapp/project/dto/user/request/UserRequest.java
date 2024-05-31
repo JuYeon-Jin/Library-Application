@@ -1,10 +1,8 @@
-package com.group.libraryapp.project.dto.request;
+package com.group.libraryapp.project.dto.user.request;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class UserRequest {
 
     public String id;
