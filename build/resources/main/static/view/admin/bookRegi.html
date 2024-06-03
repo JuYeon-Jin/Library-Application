@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서관리 어플리케이션-관리자</title>
-    <link rel="stylesheet" href="/css/temp.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 
@@ -25,11 +25,12 @@
                 </ul>
             </nav>
 
-            <form action="/book" method="post" class="content">
-                <div class="book_span"><label for="bookName">도서명</div>
-                <label for="bookName" class="book-label">도서명</label>
-                <input type="text" id="bookName" name="bookName" required class="book-input"><br>
-                <button type="submit" class="big-btn">저장</button>
+            <form action="/book" method="post" class="content content-book-regi">
+                <div class="book-input-box">
+                    <div class="book-span"><label for="bookName">도서명</label></div>
+                    <input type="text" id="bookName" name="bookName" class="book-input">
+                </div>
+                <button type="submit" class="book-btn">저장</button>
             </form>
 
         </div><!-- large-container-outline -->

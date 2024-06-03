@@ -196,14 +196,17 @@ nav ul li a.active, nav ul li a:hover {
 .content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 89%;
     width: 100%;
 }
 
 
 /* ------------------- 도서 등록 화면 ------------------- */
+.content-book-regi {
+    height: 89%;
+    justify-content: center;
+    align-items: center;
+}
+
 .book-input-box {
     width: 70%;
     display: flex;
@@ -225,9 +228,69 @@ nav ul li a.active, nav ul li a:hover {
 
 .book-btn {
     margin-top: 7%;
-    width: 200px;
+    width: 220px;
     height: 32px;
-    
+
     font-size: 15px;
     border-radius: 12px;
 }
+
+
+/* ------------------- 리스트 화면 ------------------- */
+
+/* --------- 시작 - 웹킷 기반 브라우저에서 스크롤바 스타일링 */
+.content-lists {
+    height: 83%;
+    overflow-y: scroll;
+}
+/*::-webkit-scrollbar {
+      width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+  }*/
+
+/* --------- 끝   - 웹킷 기반 브라우저에서 스크롤바 스타일링 */
+
+
+.titles,
+.lists {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+    font-size: 16px;
+}
+
+.titles {
+    font-weight: bold;
+    background-color: white;
+
+    position: sticky;
+    top: 0px;
+}
+
+.titles span {
+    line-height: 66px;
+}
+
+.lists {
+    margin-bottom: 17px;
+}
+
+.width12 {width: 12%;}
+.width42 {width: 42%;}
+.width22 {width: 22%;}
+.width18 {width: 18%;}
+.width52 {width: 52%;}
+.width15 {width: 15%;}
