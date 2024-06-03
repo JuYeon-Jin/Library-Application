@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class TestController {
 
-    @GetMapping("/testmain")
+    @GetMapping("/test")
     public String test() {
         return "redirect:/view/user/main.html";
     }
