@@ -25,7 +25,7 @@ public class UserService {
     public Boolean isAdmin(String private_id) {
         Optional<User> user = userRepository.findById(private_id);
         if (user.isPresent()) {
-            String role = user.get().getRole();
+            String role = String.valueOf(user.get().getRole());
             return "ADMIN".equals(role);
         }
 

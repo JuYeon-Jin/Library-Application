@@ -23,7 +23,8 @@ public class User {
     private String pw;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'USER'")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime signup_date;
@@ -36,9 +37,14 @@ public class User {
         }
 
         // 권한 설정
+        /*
         if (this.role == null) {
             this.role = "USER";
-        }
+        }*/
+    }
+
+    public enum Role {
+        USER, ADMIN
     }
 
     // 가입일 형식 지정
@@ -80,7 +86,7 @@ public class User {
         return pw;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
