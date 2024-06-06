@@ -12,8 +12,9 @@ import java.time.format.DateTimeFormatter;
 public class User {
 
     @Id
+    @Column(name = "private_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String private_id;
+    private String privateId;
 
     @Column(nullable = false, length = 40)   // ID VARCHAR(40) NOT NULL
     private String id;
@@ -21,45 +22,86 @@ public class User {
     @Column(nullable = false, length = 40)   // PW VARCHAR(40) NOT NULL
     private String pw;
 
-    // @Column(nullable = false, columnDefinition = "TINYINT DEFAULT 0")
-    // private int grade;
+    @Column(nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'USER'")
+    private String role;
 
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime signup_date;
 
     @PrePersist
     public void prePersist() {
+        // 가입일 설정
         if (this.signup_date == null) {
             this.signup_date = LocalDateTime.now();
         }
 
-        // if (this.grade == null) { this.grade = 0; }
+        // 권한 설정
+        if (this.role == null) {
+            this.role = "USER";
+        }
     }
 
-    protected User() {
-
+    // 가입일 형식 지정
+    public String getSignupDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return signup_date.format(formatter);
     }
 
+    // JPA 기본 생성자 반드시 필요
+    protected User() { }
+
+    // ↓ 접근자 메소드
     public User(String id, String pw) {
 
         // 예외처리
-        /*
         if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException(String.format("잘못된 id(%s)이 들어왔습니다.", id));
+            throw new IllegalArgumentException(String.format("잘못된 형식의 id(%s) 입니다.", id));
+        } else if (!krCheck(id) || lenCheck(id) < 4 || lenCheck(id) > 10) {
+            throw new IllegalArgumentException(String.format("잘못된 형식의 id(%s) 입니다.", id));
+        } else if (pw == null || pw.isBlank()) {
+            throw new IllegalArgumentException(String.format("잘못된 형식의 pw(%s) 입니다.", pw));
+        } else if (!enCheck(pw) || lenCheck(pw) < 4 || lenCheck(pw) > 10) {
+            throw new IllegalArgumentException(String.format("잘못된 형식의 pw(%s) 입니다.", pw));
         }
-        */
 
         this.id = id;
         this.pw = pw;
+    }
+
+    public String getPrivateId() {
+        return privateId;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getSignupDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return signup_date.format(formatter);
+    public String getPw() {
+        return pw;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    // ↓ 조건 충족 & 유효성 검증 메소드
+
+    // ※ a-zA-Z0-9가-힣 (공백도 허용하지 않음)
+    // 영 소문자 숫자 체크
+    public boolean enCheck(String str) {
+        String regex = "^[a-z0-9가-힣]+$";
+        return str.matches(regex);
+    }
+
+    // 영 소문자, 숫자, 한국어 체크
+    public boolean krCheck(String str) {
+        String regex = "^[a-z0-9가-힣]+$";
+        return str.matches(regex);
+    }
+
+    // 단순 길이 계산
+    public int lenCheck(String str) {
+        return str.toCharArray().length;
     }
 
 }

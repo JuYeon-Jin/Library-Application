@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class UserRequest {
 
-    public String id;
-    public String pw;
+    private String id;
+    private String pw;
 
 }

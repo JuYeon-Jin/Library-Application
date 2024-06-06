@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +18,27 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    // ADMIN 권한 체크
+    @Transactional
+    public Boolean isAdmin(String private_id) {
+        Optional<User> user = userRepository.findById(private_id);
+        if (user.isPresent()) {
+            String role = user.get().getRole();
+            return "ADMIN".equals(role);
+        }
+
+        return false;
+    }
+
+    // 로그인 → pk 반환
+    @Transactional
+    public String authenticate(String id, String pw) {
+        User user = userRepository.findByIdAndPw(id, pw)
+                    .orElseThrow(NullPointerException::new);
+
+        return user.getPrivateId();
     }
 
     // 유저 정보 저장
