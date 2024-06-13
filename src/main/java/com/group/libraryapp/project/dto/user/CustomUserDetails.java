@@ -18,8 +18,6 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        System.out.println("CustomUserDetails.getAuthorities");
-
         Collection<GrantedAuthority> collection = new ArrayList<>();
         collection.add(new GrantedAuthority() {
             @Override
@@ -27,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
                 return user.getRole();
             }
         });
+
         return collection;
     }
 

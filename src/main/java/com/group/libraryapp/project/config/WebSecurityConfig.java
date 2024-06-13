@@ -21,18 +21,15 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilter(HttpSecurity http) throws Exception {
 
-/*
         http
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/img/**", "/js/**").permitAll()
                 .requestMatchers("/", "/login", "/join").permitAll()
-                .requestMatchers("/authBranch").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/authBranch").authenticated()
                 .requestMatchers("/user/**").hasRole("USER")
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
-            );
-        */
-        http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        );
 
         http
                 .formLogin(auth -> auth.loginPage("/")
