@@ -30,7 +30,7 @@ public class LoginController {
 
     // 로그인 → 페이지 분기 ADMIN / USER (※)
     @GetMapping("/authBranch")
-    public String login(ModelAndView mav) {
+    public String login() {
         if (userService.checkRole().equals("ROLE_ADMIN")) {
             return "redirect:/admin/book";
         } else {

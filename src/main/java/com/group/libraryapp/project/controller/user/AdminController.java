@@ -1,5 +1,7 @@
 package com.group.libraryapp.project.controller.user;
 
+import com.group.libraryapp.project.dto.book.BookDTO;
+import com.group.libraryapp.project.service.book.BookService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,12 @@ import java.util.Iterator;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    private final BookService bookService;
+
+    public AdminController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     // 책 등록 PAGE
     @GetMapping("/book")
@@ -39,8 +47,9 @@ public class AdminController {
 
     // 도서 등록 (CREATE)
     @PostMapping("/book")
-    public void book() {
-
+    public String book(BookDTO dto) {
+        bookService.saveBook(dto);
+        return "redirect:/admin/book";
     }
 
     // 도서 제목 수정 (UPDATE)

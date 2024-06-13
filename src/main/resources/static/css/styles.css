@@ -288,9 +288,11 @@ nav ul li a.active, nav ul li a:hover {
     margin-bottom: 17px;
 }
 
-.width12 {width: 12%;}
+.width50 {width: 50%;}
 .width42 {width: 42%;}
 .width22 {width: 22%;}
 .width18 {width: 18%;}
-.width50 {width: 50%;}
 .width16 {width: 16%;}
+.width15 {width: 15%;}
+.width12 {width: 12%;}
+.width10 {width: 10%;}

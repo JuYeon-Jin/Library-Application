@@ -25,13 +25,18 @@
                 </ul>
             </nav>
 
-            <form action="/book" method="post" class="content content-book-regi">
+            <form action="/admin/book" method="post" class="content content-book-regi">
                 <div class="book-input-box">
                     <div class="book-span"><label for="bookName">도서명</label></div>
-                    <input type="text" id="bookName" name="bookName" class="book-input">
+                    <input type="text" id="bookName" name="bookname" class="book-input">
                 </div>
                 <button type="submit" class="book-btn">저장</button>
             </form>
+
+
+            <p>ID: <span th:text="${id}">ID</span></p>
+            <p>Role: <span th:text="${role}">Role</span></p>
+
 
         </div><!-- large-container-outline -->
     </div><!-- main-container -->

@@ -30,7 +30,6 @@ public class User {
     @Column(nullable = false, name = "SIGNUP_DATE", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime signupDate;
 
-    //
     @PrePersist
     public void prePersist() {
         if (this.signupDate == null) {
@@ -38,9 +37,8 @@ public class User {
         }
     }
 
-    // 날짜 형식 지정
     public String getSignupDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");    // 날짜 형식 지정
         return signupDate.format(formatter);
     }
 
