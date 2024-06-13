@@ -1,6 +1,9 @@
 package com.group.libraryapp.project.domain.user;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,50 +12,50 @@ import java.time.format.DateTimeFormatter;
 // 2. 모든 컬럼 가져와서 연동시키기 (pk - jakarta.persistence)
 // 3. 매개변수가 하나도 없는 기본생성자 만들기, jpa 는 기본생성자가 꼭 필요하다. (@NoArgsConstructor 대신 직접)
 @Entity
+@Getter
 public class User {
 
     @Id
-    @Column(name = "private_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String privateId;
-
-    @Column(nullable = false, length = 40)   // ID VARCHAR(40) NOT NULL
     private String id;
 
-    @Column(nullable = false, length = 40)   // PW VARCHAR(40) NOT NULL
-    private String pw;
+    @Column(unique = true, nullable = false, length = 80)   // USERNAME VARCHAR(40) NOT NULL
+    private String username;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'USER'")
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false, length = 80)   // PASSWORD VARCHAR(40) NOT NULL
+    private String password;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime signup_date;
+    private String role;
 
+    @Column(nullable = false, name = "SIGNUP_DATE", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime signupDate;
+
+    //
     @PrePersist
     public void prePersist() {
-        // 가입일 설정
-        if (this.signup_date == null) {
-            this.signup_date = LocalDateTime.now();
+        if (this.signupDate == null) {
+            this.signupDate = LocalDateTime.now();
         }
-
-        // 권한 설정
-        /*
-        if (this.role == null) {
-            this.role = "USER";
-        }*/
     }
 
-    public enum Role {
-        USER, ADMIN
-    }
-
-    // 가입일 형식 지정
+    // 날짜 형식 지정
     public String getSignupDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return signup_date.format(formatter);
+        return signupDate.format(formatter);
     }
 
+    // JPA 기본 생성자
+    protected User() { }
+
+    // 회원가입 및 로그인 접근자
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.role = "ROLE_USER";
+    }
+
+
+    /*
     // JPA 기본 생성자 반드시 필요
     protected User() { }
 
@@ -109,5 +112,5 @@ public class User {
     public int lenCheck(String str) {
         return str.toCharArray().length;
     }
-
+*/
 }

@@ -2,50 +2,61 @@ package com.group.libraryapp.project.service.user;
 
 import com.group.libraryapp.project.domain.user.User;
 import com.group.libraryapp.project.domain.user.UserRepository;
-import com.group.libraryapp.project.dto.user.request.UserRequest;
-import com.group.libraryapp.project.dto.user.response.UserResponse;
+import com.group.libraryapp.project.dto.user.UserDTO;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.Iterator;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    // ADMIN 권한 체크
-    @Transactional
-    public Boolean isAdmin(String private_id) {
-        Optional<User> user = userRepository.findById(private_id);
-        if (user.isPresent()) {
-            String role = String.valueOf(user.get().getRole());
-            return "ADMIN".equals(role);
+    // 회원 가입
+    public void joinProcess(UserDTO dto) {
+
+        boolean isUser = userRepository.existsByUsername(dto.getUsername());
+        if (isUser) {
+            return;
         }
 
-        return false;
+        userRepository.save(new User(dto.getUsername(), bCryptPasswordEncoder.encode(dto.getPassword())));
     }
 
-    // 로그인 → pk 반환
-    @Transactional
-    public String authenticate(String id, String pw) {
-        User user = userRepository.findByIdAndPw(id, pw)
-                    .orElseThrow(NullPointerException::new);
-
-        return user.getPrivateId();
+    // 로그인
+    public String loginProcess(UserDTO dto) {
+        User userData = userRepository.findByUsername(dto.getUsername());
+        return userData.getRole();
     }
 
-    // 유저 정보 저장
-    @Transactional
-    public void saveUser(UserRequest request) {
-        userRepository.save(new User(request.getId(), request.getPw()));
+    // 권한 체크
+    public String checkRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+        GrantedAuthority auth = iter.next();
+        return auth.getAuthority();
+        /*
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream()
+            .findFirst()
+            .map(GrantedAuthority::getAuthority)
+            .orElse(null);
+        * */
     }
+
+    /*
 
     // 전체 유저 목록 확인
     @Transactional(readOnly = true)
@@ -54,7 +65,7 @@ public class UserService {
     }
 
     // 검색 유저 목록 확인
-
+    */
     /*
     // CREATE   * 회원 가입
     @Transactional
