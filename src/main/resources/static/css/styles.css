@@ -288,6 +288,13 @@ nav ul li a.active, nav ul li a:hover {
     margin-bottom: 17px;
 }
 
+.width7Btn {
+    width: 6%;
+    border-radius: 6px;
+    margin-left: 2px;
+}
+
+.width52 {width: 52%;}
 .width50 {width: 50%;}
 .width42 {width: 42%;}
 .width22 {width: 22%;}
@@ -296,3 +303,4 @@ nav ul li a.active, nav ul li a:hover {
 .width15 {width: 15%;}
 .width12 {width: 12%;}
 .width10 {width: 10%;}
+.width7 {width: 7%;}
