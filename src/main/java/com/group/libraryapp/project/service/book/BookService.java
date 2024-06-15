@@ -30,7 +30,7 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public List<BookDTO> bookList() {
-        return  bookRepository.findAll().stream()
+        return  bookRepository.findByDeletedFalse().stream()
                 .map(BookDTO::new)
                 .collect(Collectors.toList());
     }

@@ -288,10 +288,17 @@ nav ul li a.active, nav ul li a:hover {
     margin-bottom: 14px;
 }
 
-.width7Btn {
-    width: 6%;
-    border-radius: 6px;
-    margin-left: 2px;
+.btnGap {
+    width: 14%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+}
+
+.bookBtn {
+    width: 44px;
+    border-radius: 7px;
 }
 
 .width52 {width: 52%;}

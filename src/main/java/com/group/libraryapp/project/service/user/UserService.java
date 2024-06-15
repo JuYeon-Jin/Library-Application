@@ -2,15 +2,19 @@ package com.group.libraryapp.project.service.user;
 
 import com.group.libraryapp.project.domain.user.User;
 import com.group.libraryapp.project.domain.user.UserRepository;
+import com.group.libraryapp.project.dto.book.BookDTO;
 import com.group.libraryapp.project.dto.user.UserDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -56,16 +60,17 @@ public class UserService {
         * */
     }
 
-    /*
-
     // 전체 유저 목록 확인
+    /*
     @Transactional(readOnly = true)
-    public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream().map(UserResponse::new).collect(Collectors.toList());
+    public List<User> userList() {
+        return  userRepository.findByDeletedFalse().stream()
+                .map(BookDTO::new)
+                .collect(Collectors.toList());
     }
-
+*/
     // 검색 유저 목록 확인
-    */
+
     /*
     // CREATE   * 회원 가입
     @Transactional

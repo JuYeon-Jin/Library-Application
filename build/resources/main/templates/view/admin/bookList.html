@@ -37,8 +37,10 @@
                     <span class="width12" th:text="${bookStat.index + 1}"></span>
                     <span class="width50" th:text="${book.bookname}"></span>
                     <span class="width18" th:text="${book.regiDate}"></span>
-                    <button class="width7">수정</button>
-                    <button class="width7">삭제</button>
+                    <div class="btnGap">
+                        <button class="bookBtn">수정</button>
+                        <button class="bookBtn">삭제</button>
+                    </div>
                 </div>
             </div>
 

@@ -23,7 +23,7 @@ public class Book {
     @Column(nullable = false, name = "REGI_DATE", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime regiDate;
 
-    @Column(nullable = false, name = "DELETE_BOOK", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean deleted;
 
     @PrePersist

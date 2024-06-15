@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class BookDTO {
 
     private int bookId;
@@ -16,6 +15,21 @@ public class BookDTO {
     private boolean status;
     private boolean deleted;
 
+    public BookDTO() {}
+
+    public BookDTO(int bookId,
+                   String bookname,
+                   String regiDate,
+                   boolean status,
+                   boolean deleted) {
+        this.bookId = bookId;
+        this.bookname = bookname;
+        this.regiDate = regiDate;
+        this.status = status;
+        this.deleted = deleted;
+    }
+
+    // List<Book>
     public BookDTO(Book book) {
         this.bookId = book.getId();
         this.bookname = book.getBookname();
