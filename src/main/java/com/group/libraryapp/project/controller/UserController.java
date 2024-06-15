@@ -1,11 +1,9 @@
-package com.group.libraryapp.project.controller.user;
+package com.group.libraryapp.project.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/user")
@@ -29,6 +27,10 @@ public class UserController {
     }
 
     // 도서 반납 (PUT)
+    @PostMapping("/returnBook")
+    public void returnBook() {
+
+    }
 
 
 /*

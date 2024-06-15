@@ -1,4 +1,4 @@
-package com.group.libraryapp.project.controller.user;
+package com.group.libraryapp.project.controller;
 
 import com.group.libraryapp.project.dto.book.BookDTO;
 import com.group.libraryapp.project.service.book.BookService;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -53,6 +53,11 @@ public class AdminController {
     }
 
     // 도서 제목 수정 (UPDATE)
+    @PutMapping("/updateBook")
+    public String updateBook() {
+
+        return "redirect:/admin/bookList";
+    }
 
     // 도서 삭제 (DELETE)
 
@@ -73,6 +78,8 @@ public class AdminController {
         model.addAttribute("id", id);
         model.addAttribute("role", role);
         //-------------------------------------------------------------------------------------
+
+        model.addAttribute("books", bookService.bookList());
         return "view/admin/bookList";
 
     }

@@ -33,7 +33,7 @@ public class Book {
         }
     }
 
-    public String getSignupDate() {
+    public String getRegiDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");    // 날짜 형식 지정
         return regiDate.format(formatter);
     }

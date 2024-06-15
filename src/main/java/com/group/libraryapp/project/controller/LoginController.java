@@ -1,11 +1,10 @@
-package com.group.libraryapp.project.controller.user;
+package com.group.libraryapp.project.controller;
 
 import com.group.libraryapp.project.dto.user.UserDTO;
 import com.group.libraryapp.project.service.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class LoginController {
