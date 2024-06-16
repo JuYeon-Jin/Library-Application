@@ -1,6 +1,7 @@
 package com.group.libraryapp.project.dto.book;
 
 import com.group.libraryapp.project.domain.book.Book;
+import com.group.libraryapp.project.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

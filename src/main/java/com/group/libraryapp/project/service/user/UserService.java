@@ -29,12 +29,9 @@ public class UserService {
 
     // 회원 가입
     public void joinProcess(UserDTO dto) {
-
-        boolean isUser = userRepository.existsByUsername(dto.getUsername());
-        if (isUser) {
+        if (userRepository.existsByUsername(dto.getUsername())) {
             return;
         }
-
         userRepository.save(new User(dto.getUsername(), bCryptPasswordEncoder.encode(dto.getPassword())));
     }
 
@@ -61,31 +58,16 @@ public class UserService {
     }
 
     // 전체 유저 목록 확인
-    /*
     @Transactional(readOnly = true)
-    public List<User> userList() {
-        return  userRepository.findByDeletedFalse().stream()
-                .map(BookDTO::new)
+    public List<UserDTO> userList() {
+        return  userRepository.findByDeletedFalseAndRole("ROLE_USER").stream()
+                .map(UserDTO::new)
                 .collect(Collectors.toList());
     }
-*/
+
     // 검색 유저 목록 확인
 
     /*
-    // CREATE   * 회원 가입
-    @Transactional
-    public void saveUser(UserCreateRequest request) {
-        userRepository.save(new User(request.getName(), request.getAge()));
-    }
-
-    // READ   * 회원 전체 목록 조회
-    @Transactional(readOnly = true)
-    public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream()
-                .map(UserResponse::new)
-                .collect(Collectors.toList());
-    }
-
     // UPDATE   * 비밀번호 수정
     @Transactional
     public void updateUser(UserUpdateRequest request) {

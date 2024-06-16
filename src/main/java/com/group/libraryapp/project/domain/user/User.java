@@ -30,6 +30,9 @@ public class User {
     @Column(nullable = false, name = "SIGNUP_DATE", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime signupDate;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean deleted;
+
     @PrePersist
     public void prePersist() {
         if (this.signupDate == null) {

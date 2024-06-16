@@ -32,18 +32,13 @@
                     <span class="width22">가입일</span>
                     <span class="width18">대여중인 도서</span>
                 </div>
-                <div class="lists">
-                    <span class="width12">1</span>
-                    <span class="width42">관리자</span>
-                    <span class="width22">2024.05.23</span>
+                <div th:each="user : ${users}" class="lists">
+                    <span class="width12" th:text="${userStat.index + 1}"></span>
+                    <span class="width42" th:text="${user.username}"></span>
+                    <span class="width22" th:text="${user.signupDate}"></span>
                     <span class="width18">2</span>
                 </div>
             </div>
-
-
-            <p>ID: <span th:text="${id}">ID</span></p>
-            <p>Role: <span th:text="${role}">Role</span></p>
-
 
         </div><!-- large-container-outline -->
     </div><!-- main-container -->

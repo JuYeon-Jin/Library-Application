@@ -2,24 +2,21 @@ package com.group.libraryapp.project.controller;
 
 import com.group.libraryapp.project.dto.book.BookDTO;
 import com.group.libraryapp.project.service.book.BookService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.group.libraryapp.project.service.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
     private final BookService bookService;
+    private final UserService userService;
 
-    public AdminController(BookService bookService) {
+    public AdminController(BookService bookService, UserService userService) {
         this.bookService = bookService;
+        this.userService = userService;
     }
 
     // 책 등록 PAGE
@@ -59,7 +56,7 @@ public class AdminController {
     // 유저 전체 목록 PAGE
     @GetMapping("/userList")
     public String userList(Model model) {
-        // model.addAttribute("users", userService.userList());
+        model.addAttribute("users", userService.userList());
         return "view/admin/userList";
     }
 
