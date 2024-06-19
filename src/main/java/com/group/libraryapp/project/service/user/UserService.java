@@ -65,9 +65,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    // 검색 유저 목록 확인
 
     /*
+    // 유저 검색
+
     // UPDATE   * 비밀번호 수정
     @Transactional
     public void updateUser(UserUpdateRequest request) {
@@ -91,6 +92,5 @@ public class UserService {
     }
 
     */
-
 
 }

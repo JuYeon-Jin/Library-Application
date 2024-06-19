@@ -21,7 +21,7 @@ public class AdminController {
 
     // 책 등록 PAGE
     @GetMapping("/book")
-    public String book(Model model) {
+    public String book() {
         return "view/admin/book";
     }
 

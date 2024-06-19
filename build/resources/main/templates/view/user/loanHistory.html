@@ -8,42 +8,45 @@
 </head>
 <body>
 
-<!-- 헤더 -->
-<div class="header"> <img src="/img/book.png" alt="Book Icon" style="width: 70px; margin-right: 24px;"> 도서관리 어플리케이션 </div>
+<div class="container">
 
-<!-- 메인 -->
-<div class="main-container2">
-    <div class="large-container-outline">
+    <!-- 헤더 -->
+    <div class="header"> <img src="/img/book.png" alt="Book Icon" style="width: 70px; margin-right: 24px;"> 도서관리 어플리케이션 </div>
 
-        <nav>
-            <ul>
-                <li><a href="#" class="active">대여 도서 목록</a></li>|
-                <li><a href="/user/bookList">도서 전체 목록</a></li>
-            </ul>
-        </nav>
+    <!-- 메인 -->
+    <div class="main-container2">
+        <div class="large-container-outline">
 
-        <div class="content content-lists">
-            <div class="titles">
-                <span class="width12">번호</span>
-                <span class="width50">제목</span>
-                <span class="width16">등록일</span>
-                <span class="width16">상태</span>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">대여 도서 목록</a></li>|
+                    <li><a href="/user/bookList">도서 전체 목록</a></li>
+                </ul>
+            </nav>
+
+            <div class="content content-lists">
+
+                <div class="titles">
+                    <span class="width12">번호</span>
+                    <span class="width50">제목</span>
+                    <span class="width16">대출일</span>
+                    <span class="width16">반납</span>
+                </div>
+                <form th:each="book : ${books}" class="lists" id="book" action="/user/returnBook" method="post">
+                    <span class="width12" th:text="${bookStat.index + 1}"></span>
+                    <span class="width50" th:text="${book.bookname}"></span>
+                    <span class="width16" th:text="${book.loanDate}"></span>
+                    <div class="width16">
+                        <input type="hidden" id="bookId" name="bookId" th:value="${book.bookId}">
+                        <input type="hidden" id="id" name="id" th:value="${book.id}">
+                        <button class="bookBtn" type="submit">반납</button>
+                    </div>
+                </form>
+
             </div>
-            <div class="lists">
-                <span class="width12">1</span>
-                <span class="width50">전국 치킨 맛집</span>
-                <span class="width16">2024.05.23</span>
-                <span class="width16">대여가능</span>
-            </div>
-        </div>
 
-
-        <p>ID: <span th:text="${id}">ID</span></p>
-        <p>Role: <span th:text="${role}">Role</span></p>
-
-
-    </div><!-- large-container-outline -->
-</div><!-- main-container -->
+        </div><!-- large-container-outline -->
+    </div><!-- main-container -->
 </div><!-- container -->
 
 </body>

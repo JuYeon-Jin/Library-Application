@@ -75,6 +75,12 @@ Button:active {
     font-weight: bold;
 }
 
+button:disabled {
+    background-color: #d3d3d3;
+    color: black;
+    cursor: not-allowed;
+}
+
 input {
     padding-left: 3%;
 
@@ -301,7 +307,7 @@ nav ul li a.active, nav ul li a:hover {
     border-radius: 7px;
 }
 
-.width52 {width: 52%;}
+.width68 {width: 68%;}
 .width50 {width: 50%;}
 .width42 {width: 42%;}
 .width22 {width: 22%;}
