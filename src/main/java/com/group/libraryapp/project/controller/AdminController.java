@@ -1,14 +1,12 @@
 package com.group.libraryapp.project.controller;
 
-import com.group.libraryapp.project.dto.book.BookDTO;
-import com.group.libraryapp.project.service.book.BookService;
-import com.group.libraryapp.project.service.user.UserService;
+import com.group.libraryapp.project.service.BookService;
+import com.group.libraryapp.project.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
 
     private final BookService bookService;
@@ -20,9 +18,21 @@ public class AdminController {
     }
 
     // 책 등록 PAGE
-    @GetMapping("/book")
+    @GetMapping("/library")
     public String book() {
         return "view/admin/book";
+    }
+
+/* *
+    @GetMapping("/admin/library")
+    public String adminBookList(Model model) {
+        model.addAttribute("userInfo", getSecurityUsername());
+        return "view/admin-book-list";
+    }
+    @GetMapping("/admin/member")
+    public String adminMemberList(Model model) {
+        model.addAttribute("userInfo", getSecurityUsername());
+        return "view/admin-member-list";
     }
 
     // 도서 등록 (CREATE)
@@ -59,6 +69,7 @@ public class AdminController {
         model.addAttribute("users", userService.userList());
         return "view/admin/userList";
     }
+*/
 
     /*
 

@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDTO {
-
-    private String id;
+/*
+    private String userId;
     private String username;
     private String password;
 
@@ -17,8 +17,8 @@ public class UserDTO {
 
     public UserDTO() {}
 
-    public UserDTO(String id, String username, String password, String signupDate, boolean deleted) {
-        this.id = id;
+    public UserDTO(String userId, String username, String password, String signupDate, boolean deleted) {
+        this.userId = userId;
         this.username = username;
         this.password = password;
         this.signupDate = signupDate;
@@ -27,10 +27,10 @@ public class UserDTO {
 
     // List<User>
     public UserDTO(User user) {
-        this.id = user.getId();
+        this.userId = user.getUserId();
         this.username = user.getUsername();
         this.password = user.getPassword();
-        this.signupDate = String.valueOf(user.getSignupDate());
+        this.signupDate = String.valueOf(user.getSignedAt());
         this.deleted = user.isDeleted();
-    }
+    }*/
 }

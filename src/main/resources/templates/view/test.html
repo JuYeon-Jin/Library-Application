@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>테스트</title>
+    <link rel="stylesheet" href="/css/user-style.css">
+</head>
+<body>
+<div class="container">
+    <div class="wrap-content">
+
+        <div class="header">
+
+            <div class="user-nav">
+                <button>홍길동</button>
+                <span> 님 환영합니다.</span>
+                <button>로그아웃</button>
+            </div>
+
+            <div class="domain-title">
+                <span>도서관리 어플리케이션</span>
+            </div>
+
+        </div>
+
+        <div class="menu-nav">
+            <div class="category-nav">
+                <button disabled>전체 도서 목록</button>
+                <button>나의 도서 목록</button>
+            </div>
+            <div class="search-book">
+                <input placeholder="도서명 검색">
+                <button>
+                    <img src="/img/glass.png" alt="book image" class="search-img">
+                </button>
+            </div>
+        </div>
+
+
+        <div class="book-list-container">
+
+            <div class="book-list-area">
+
+                <div class="book-item">
+                    <img src="/img/book-img/5-test.png" alt="book image" class="book-item-img">
+                    <div class="book-item-info">
+                        <div>
+                            <span class="book-item-title">전쟁과 평화 수정판</span>
+                        </div>
+                        <div class="book-item-etc">
+                            <span>레프 톨스토이</span> ·
+                            <span>레고북스</span> ·
+                            <span>2024.10.31</span>
+                        </div>
+                    </div>
+                    <div class="book-item-btn-area">
+                        <button class="book-item-btn">대여</button>
+                        <button class="book-item-btn">예약</button>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="best-book-area">
+                <div class="best-book-area-title"><span>베스트✨ 도서</span></div>
+                <div class="select-book">
+                    <img src="/img/book-img/5-test.png" alt="book image" class="select-book-img" >
+                    <div class="select-book-info">
+                        <span>01</span>
+                        <span>제목</span>
+                        <span>저자</span>
+                    </div>
+                </div>
+                <div class="rank-book">
+                    <div class="rank-book-item">
+                        <span class="rank-number">2</span>
+                        <img src="/img/book-img/5-test.png" alt="book image" class="rank-book-img">
+                    </div>
+                    <div class="rank-book-item">
+                        <span class="rank-number">3</span>
+                        <img src="/img/book-img/5-test.png" alt="book image" class="rank-book-img">
+                    </div>
+                    <div class="rank-book-item">
+                        <span class="rank-number">4</span>
+                        <img src="/img/book-img/5-test.png" alt="book image" class="rank-book-img">
+                    </div>
+                    <div class="rank-book-item">
+                        <span class="rank-number">5</span>
+                        <img src="/img/book-img/5-test.png" alt="book image" class="rank-book-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer"></div>
+
+    </div>
+</div>
+
+
+
+
+<p>도서 전체 목록</p>
+<p>userInfo: ${userInfo}</p>
+<p th:text="${userInfo}"></p>
+<br><br>
+
+<p>book 테이블 조회</p>
+<div th:each="book : ${books}" id="book">
+    <span th:text="${book.bookId}"></span>
+    <span th:text="${book.bookName}"></span>
+    <span th:text="${book.writer}"></span>
+    <span th:text="${book.registeredAt}"></span>
+    <span th:text="${book.borrowed}"></span>
+    <span th:text="${book.registeredAt}"></span>
+</div>
+<br><br>
+
+<p>reservation 테이블 조회</p>
+<div th:each="book : ${reservation}" id="reservation">
+    <span th:text="${book.reservationId}"></span>
+    <span th:text="${book.bookId}"></span>
+    <span th:text="${book.bookName}"></span>
+    <span th:text="${book.writer}"></span>
+    <span th:text="${book.waitingRank}"></span>
+</div>
+<br><br>
+
+<p>loan-history 테이블 조회</p>
+<div th:each="book : ${loan}" id="loan">
+    <span th:text="${book.loanId}"></span>
+    <span th:text="${book.bookId}"></span>
+    <span th:text="${book.userId}"></span>
+    <span th:text="${book.writer}"></span>
+    <span th:text="${book.bookName}"></span>
+    <span th:text="${book.borrowedAt}"></span>
+    <span th:text="${book.returned}"></span>
+</div>
+
+
+</body>
+</html>

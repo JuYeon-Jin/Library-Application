@@ -3,47 +3,55 @@ package com.group.libraryapp.project.domain.book;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
+@Table(name = "books")
 @Getter
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "book_id")
+    private int bookId;
 
-    @Column(nullable = false)
-    private String bookname;
+    @Column(nullable = false, name = "book_name")
+    private String bookName;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean status;
+    @Column(nullable = false, length = 50)
+    private String writer;
 
-    @Column(nullable = false, name = "REGI_DATE", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime regiDate;
+    @Column(nullable = false, length = 50)
+    private String publisher;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean deleted;
+    @Column(nullable = false, name = "img_path", length = 50)
+    private String imgPath;
 
-    @PrePersist
-    public void prePersist() {
-        if (this.regiDate == null) {
-            this.regiDate = LocalDateTime.now();
-        }
-    }
+    @Column(nullable = false, name = "published_at")
+    private LocalDate publishedAt;
 
-    public String getRegiDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");    // 날짜 형식 지정
-        return regiDate.format(formatter);
-    }
+    @Column(nullable = false, name = "registered_at")
+    private LocalDateTime registeredAt;
 
-    // JPA 기본 생성자
+
+    /**
+     * JPA 기본 생성자 (필수)
+     */
     protected Book() { }
 
-    // 도서 등록 접근자
-    public Book(String bookname) {
-        this.bookname = bookname;
+
+    /**
+     * 도서등록용 생성자입니다.
+     * TODO 접근자와 생성자의 차이 공부하기
+     */
+    public Book(String bookName, String writer, String publisher, String imgPath, LocalDate publishedAt) {
+        this.bookName = bookName;
+        this.writer = writer;
+        this.publisher = publisher;
+        this.publishedAt = publishedAt;
+        this.imgPath = imgPath;
+        this.registeredAt = LocalDateTime.now();
     }
 
 }

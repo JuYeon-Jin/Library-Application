@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>대여 목록</title>
+    <link rel="stylesheet" href="/css/user-style.css">
+    <script>
+        function navigateToLibrary() {
+            window.location.href = '/user/library';
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+<div class="wrap-container">
+
+    <div class="header">
+
+        <form class="user-nav" action="/logout" method="post">
+            <button th:text="${userInfo}"></button>
+            <span>님 환영합니다.</span>
+            <button type="submit">로그아웃</button>
+        </form>
+
+        <div class="domain-title">
+            <span>도서관리 어플리케이션</span>
+        </div>
+
+    </div>
+
+    <div class="menu-nav">
+        <div class="category-nav">
+            <button onclick="navigateToLibrary()">전체 도서 목록</button>
+            <button disabled>나의 도서 목록</button>
+        </div>
+    </div>
+
+
+
+    <div class="my-book-container">
+        <div class="my-book-menu-title">
+            <span>✨ 예약 도서 (<span th:text="${#lists.size(reservation)}"></span>/3)</span>
+        </div>
+        <div class="book-reservation-area">
+
+            <div th:each="book : ${reservation}" class="reservation-book-item">
+                <div class="my-book-info">
+                    <img th:src="${book.imgPath}" alt="book image" class="my-book-img">
+                    <div class="my-book-etc">
+                        <div class="my-book-title">
+                            <span th:text="${book.bookName}"></span>
+                        </div>
+                        <div class="book-item-etc">
+                            <span th:text="${book.publisher}"></span>
+                        </div>
+                        <div class="reservation-date">
+                            예약요청일 : <span th:text="${book.reservedAt}" class="highlight-data"></span>
+                        </div>
+                        <div class="reservation-queue-count">
+                            예약대기자 수 : &nbsp;&nbsp;<span th:text="${book.reservedAt}" class="highlight-data">3</span> 명
+                        </div>
+                    </div>
+                </div>
+                <div class="my-book-btn-area">
+                    <button class="book-item-btn">예약취소</button>
+                    <button class="book-item-btn" disabled>대여</button>
+                </div>
+            </div>
+
+
+            <div th:if="${#lists.isEmpty(reservation)}" class="no-my-book-result">
+                <span>예약중인 도서가 없습니다.</span>
+            </div>
+
+
+        </div>
+
+
+
+        <div class="my-book-menu-title">
+            <span>✨ 대출 도서 (<span th:text="${#lists.size(loan)}"></span>/6)</span>
+        </div>
+
+        <div class="book-loan-area">
+
+            <div th:each="book : ${loan}"  class="loan-book-item">
+                <div class="my-book-info">
+                    <img th:src="${book.imgPath}" alt="book image" class="my-book-img">
+                    <div class="my-book-etc">
+                        <div class="my-book-title">
+                            <span th:text="${book.bookName}"></span>
+                        </div>
+                        <div class="book-item-etc">
+                            <span th:text="${book.publisher}"></span>
+                        </div>
+                        <div class="reservation-date">
+                            대출 시작일 : <span th:text="${book.borrowedAt}" class="highlight-data"></span>
+                        </div>
+                        <div class="reservation-queue-count">
+                            대출 종료일 : <span th:text="${book.dueDate}" class="highlight-data"></span>
+                        </div>
+                        <div class="reservation-queue-count">
+                            연체일수: &nbsp;&nbsp;<span th:text="${book.overdueDays}" class="highlight-data"></span> 일
+                        </div>
+                    </div>
+                </div>
+                <div class="my-book-btn-area">
+                    <button class="book-item-btn">반납</button>
+                </div>
+            </div>
+
+
+            <div th:if="${#lists.isEmpty(loan)}" class="no-my-book-result">
+                <span>대출중인 도서가 없습니다.</span>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="footer"></div>
+</div>
+</div>
+</body>
+</html>
