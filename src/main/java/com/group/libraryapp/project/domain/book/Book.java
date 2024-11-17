@@ -43,7 +43,7 @@ public class Book {
 
     /**
      * 도서등록용 생성자입니다.
-     * TODO 접근자와 생성자의 차이 공부하기
+     * TODO [공부] 접근자와 생성자의 차이
      */
     public Book(String bookName, String writer, String publisher, String imgPath, LocalDate publishedAt) {
         this.bookName = bookName;

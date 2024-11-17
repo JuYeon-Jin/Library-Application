@@ -45,7 +45,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 }
 
 /*
-    TODO UserDetailsService 와 Spring Security (공부)
+    TODO [공부] UserDetailsService 와 Spring Security
 
     Spring Security 는 기본적으로 사용자 인증을 위해 **UserDetailsService**를 사용합니다.
     CustomUserDetailsService 클래스는 이 인터페이스를 구현하여 사용자가 입력한 username 에 해당하는 사용자 정보를

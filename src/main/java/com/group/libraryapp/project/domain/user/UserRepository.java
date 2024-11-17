@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * JPA Repository 의 인터페이스로 데이터베이스와 직접적으로 통신하여 데이터를 컨트롤합니다.
- * TODO extends 인터페이스, 상속, implements 등의 차이점 공부하기.
+ * TODO [공부] extends 인터페이스, 상속, implements 등의 차이점
  */
 public interface UserRepository extends JpaRepository<User, String> {
 

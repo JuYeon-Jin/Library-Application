@@ -19,9 +19,9 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 public class WebSecurityConfig {
 
     /*
-    TODO BCryptPasswordEncoder 는 Config 에서 Bean 으로 등록하는 방법 말고도 있었던 거 같은데, 찾아보고 차이점 생각해보기
+    TODO [공부] BCryptPasswordEncoder 의 여러가지 설정 방법
 
-    해결함. 시큐리티 때문임
+    왜 빈으로 등록했을까? → 해결함. 시큐리티 때문임
     Spring Security 에서 자동으로 암호화/비교 로직을 처리할 수 있도록
     @EnableWebSecurity(Spring Security 설정을 활성화하는 클래스) 어노테이션이 붙은 클래스에 Bean 으로 등록해야 함
 
@@ -43,7 +43,10 @@ public class WebSecurityConfig {
 
     /**
      * HiddenHttpMethodFilter 를 빈으로 등록하여
-     * POST 요청에서 실제 PUT, DELETE 메서드를 사용할 수 있도록 처리합니다.
+     * 이 필터는 HTTP 메서드 오버라이드를 지원하여 POST 요청에서 실제 PUT, DELETE 등의
+     * HTTP 메서드를 사용할 수 있도록 처리합니다.
+     *
+     * @return HiddenHttpMethodFilter 인스턴스
      */
     @Bean
     public HiddenHttpMethodFilter hiddenHttpMethodFilter() {

@@ -43,7 +43,7 @@ public class LoginController {
     }
 
 /*
-    TODO view 를 직접 반환하는 대신 redirect 하는 이유 (공부)
+    TODO [공부] view 를 직접 반환하는 대신 redirect 하는 이유
 
     새로 고침(리프레시)에 안전:
     사용자가 페이지를 새로 고침할 때, 브라우저가 동일한 POST 요청을 다시 보내지 않도록 하기 위함입니다.
@@ -107,8 +107,7 @@ public class LoginController {
     }
 
     /*
-
-    TODO stream 과 Iterator (공부)
+    TODO [공부] stream 과 Iterator
     * < redirectBasedOnRole()의 Iterator 버전 >
     public String redirectBasedOnRoleWithIterator() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

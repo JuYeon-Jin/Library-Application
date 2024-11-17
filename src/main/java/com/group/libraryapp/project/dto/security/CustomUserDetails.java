@@ -26,7 +26,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
 
-    // TODO 왜 COLLECTION 인지? 저게 몬지 공부 필요
+    // TODO [공부] 왜 COLLECTION 인지
     /**
      * 이 메서드는 사용자의 역할(role)등의 권한 정보를 Spring Security 에 제공하기 위해 `GrantedAuthority`를 반환합니다.
      *

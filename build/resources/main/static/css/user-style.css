@@ -135,7 +135,7 @@ body {
     height: 540px;
 
     display: grid;
-    grid-template-columns: 7fr 2fr;
+    grid-template-columns: 7fr 3fr;
     grid-template-rows: 1fr;
     gap: 30px;
 }
@@ -342,8 +342,8 @@ body {
 }
 
 .my-book-img {
-    width: 80px;
-    height: auto;
+    height: 110px;
+    width: auto;
 }
 
 .my-book-etc {

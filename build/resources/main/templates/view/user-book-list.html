@@ -5,9 +5,20 @@
     <title>전체 목록</title>
     <link rel="stylesheet" href="/css/user-style.css">
     <script>
+
         function navigateToMyBook() {
             window.location.href = '/user/my-book';
         }
+
+        function submitForm(url, bookId) {
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = url + bookId;
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+
     </script>
 </head>
 <body>
@@ -61,8 +72,10 @@
                 </div>
                 <div class="book-item-btn-area">
                     <button th:disabled="${book.isBorrowed}"
+                            th:onclick="|submitForm('/user/loan/', ${book.bookId})|"
                             class="book-item-btn">대여</button>
                     <button th:disabled="${not book.isBorrowed or book.isAlreadyReserved}"
+                            th:onclick="|submitForm('/user/reserve/', ${book.bookId})|"
                             class="book-item-btn">예약</button>
                 </div>
             </div>

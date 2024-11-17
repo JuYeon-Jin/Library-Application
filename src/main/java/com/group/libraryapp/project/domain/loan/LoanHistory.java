@@ -19,7 +19,7 @@ public class LoanHistory {
     private int loanId;
 
     /*
-    TODO Eager(Default) vs. Lazy Fetching 과연 뭐를 사용해야 적절할까 @ManyToOne(fetch = FetchType.LAZY)
+    TODO [공부] Eager(Default) vs. Lazy Fetching 과연 뭐를 사용해야 적절할까 @ManyToOne(fetch = FetchType.LAZY)
     JPA 의 연관 관계에서 데이터를 언제 로드할지 결정하는 방식
     - FetchType.EAGER (즉시 로딩): 엔티티가 로드될 때 연관된 모든 엔티티도 함께 로드됩니다.
     - FetchType.LAZY (지연 로딩): 연관된 엔티티는 실제로 사용될 때까지 로드되지 않고, 필요할 때 데이터를 가져옵니다.

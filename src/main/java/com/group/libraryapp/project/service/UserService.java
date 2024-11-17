@@ -63,43 +63,15 @@ public class UserService {
     }
 
 
+    // TODO 클라이언트에서 자바스크립트로 입력 검증 필요
+    // TODO 트랜잭션 적용할지에 대한 고민 (필요성, 효율성 등)
 
-
-
-    /*
-    *
-    ----------------------------------   이건 전부 관리자 기능
-    *
-    // 유저 검색
-
-    // 전체 유저 목록 확인
-    @Transactional(readOnly = true)
+    /* *
+    // TODO 관리자 - 전체 유저 목록 확인 (정렬 추가)
     public List<UserDTO> userList() {
         return  userRepository.findByDeletedFalseAndRole("ROLE_USER").stream()
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
-    }
-
-    // UPDATE   * 비밀번호 수정
-    @Transactional
-    public void updateUser(UserUpdateRequest request) {
-        User user = userRepository.findById(request.getId())
-                .orElseThrow(IllegalArgumentException::new);
-
-        user.updateName(request.getName());
-        userRepository.save(user);
-    }
-
-    // DELETE   * 회원 탈퇴
-    @Transactional
-    public void deleteUser(String name) {
-        User user = userRepository.findByName(name)
-                .orElseThrow(IllegalArgumentException::new);
-        if (user == null) {
-            throw new IllegalArgumentException();
-        }
-
-        userRepository.delete(user);
     }
     */
 }

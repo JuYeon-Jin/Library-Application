@@ -5,9 +5,31 @@
     <title>대여 목록</title>
     <link rel="stylesheet" href="/css/user-style.css">
     <script>
+
         function navigateToLibrary() {
             window.location.href = '/user/library';
         }
+
+        function submitForm(url, bookId, method) {
+            const form = document.createElement('form');
+
+            if (method === 'GET' || method === 'POST') {
+                form.method = method;
+
+            } else {
+                form.method = 'POST';
+                const hiddenMethodField = document.createElement('input');
+                hiddenMethodField.type = 'hidden';
+                hiddenMethodField.name = '_method';
+                hiddenMethodField.value = method;
+                form.appendChild(hiddenMethodField);
+            }
+
+            form.action = url + bookId;
+            document.body.appendChild(form);
+            form.submit();
+        }
+
     </script>
 </head>
 <body>
@@ -62,8 +84,10 @@
                     </div>
                 </div>
                 <div class="my-book-btn-area">
-                    <button class="book-item-btn">예약취소</button>
-                    <button class="book-item-btn" disabled>대여</button>
+                    <button th:onclick="|submitForm('/user/reserve/', ${book.reservationId}, 'DELETE')|"
+                            class="book-item-btn">예약취소</button>
+                    <button th:onclick="|submitForm('/user/reserve/loan/', ${book.reservationId}, 'POST')|"
+                            class="book-item-btn">대여</button>
                 </div>
             </div>
 
@@ -105,7 +129,8 @@
                     </div>
                 </div>
                 <div class="my-book-btn-area">
-                    <button class="book-item-btn">반납</button>
+                    <button th:onclick="|submitForm('/user/reserve/', ${book.loanId}, 'PUT')|"
+                            class="book-item-btn">반납</button>
                 </div>
             </div>
 

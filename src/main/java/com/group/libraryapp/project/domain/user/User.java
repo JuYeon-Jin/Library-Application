@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 
 /*
-    TODO JPA Entity 의 기본 규칙 (공부)
+    TODO [공부] JPA Entity 의 기본 규칙
     // 1. @Entity 어노테이션 붙이기
     // 2. 모든 컬럼 가져와서 연동시키기 (pk - jakarta.persistence)
     // 3. 매개변수가 하나도 없는 기본생성자 만들기, jpa 는 기본생성자가 꼭 필요하다. (@NoArgsConstructor 대신 직접)
