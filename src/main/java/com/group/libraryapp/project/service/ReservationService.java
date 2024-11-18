@@ -97,7 +97,7 @@ public class ReservationService {
      * @throws ReservationNotFoundException reservationId 와 userId로 조회한 예약이 존재하지 않는 경우
      */
     public void cancelReservation(String userId, int reservationId) {
-        Reservation reservation = reservationRepository.findByIdAndUser_UserId(reservationId, userId)
+        Reservation reservation = reservationRepository.findByReservationIdAndUser_UserId(reservationId, userId)
                 .orElseThrow(() -> new ReservationNotFoundException("예약 취소를 처리할 수 없습니다. 예약 상태를 확인하고 다시 시도해 주세요."));
 
         reservationRepository.delete(reservation);

@@ -77,7 +77,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
      * @return 예약이 존재하고 사용자가 해당 예약을 삭제할 권한이 있을 경우 예약 객체를 반환합니다.
      *         예약이 존재하지 않거나 사용자가 권한이 없는 경우 Optional.empty()를 반환합니다.
      */
-    Optional<Reservation> findByIdAndUser_UserId(int reservationId, String userId);
+    Optional<Reservation> findByReservationIdAndUser_UserId(int reservationId, String userId);
 
     /* TODO [공부] Optional<Reservation> 과 Reservation 의 차이
 

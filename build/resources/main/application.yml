@@ -1,14 +1,15 @@
 spring:
   datasource:
-    url: "jdbc:mysql://localhost/library"
-    username: "root"
-    password: "root"
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost/library"         # 데이터베이스 URL
+    username: "root"                              # 데이터베이스 사용자 이름
+    password: "root"                              # 데이터베이스 비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver   # MySQL JDBC 드라이버
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: none                              # 스키마 자동 생성/업데이트를 비활성화 (수동 관리)
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true                            # 실행된 SQL 로그를 콘솔에 출력
+        format_sql: true                          # SQL 로그를 읽기 쉽게 포맷
+        # dialect: org.hibernate.dialect.MySQLDialect   MySQLDialect 사용하지만 warn 메시지가 존재하므로 삭제
+    open-in-view: false                           # Open-in-view 비활성화 (성능 최적화)

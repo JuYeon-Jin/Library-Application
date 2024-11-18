@@ -35,7 +35,7 @@ spring-boot-devtools/
 *.env
 
 # Ignore IntelliJ workspace file
-/workspace.xml
+/.idea/workspace.xml
 
 # Ignore other generated directories or files
 /shelf/
