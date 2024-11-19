@@ -74,7 +74,7 @@ public class WebSecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
             .requestMatchers("/css/**", "/img/**", "/js/**").permitAll()
-            .requestMatchers("/", "/login", "/join", "/test").permitAll()
+            .requestMatchers("/", "/login", "/join", "/error").permitAll()
             .requestMatchers("/authBranch").authenticated()
             .requestMatchers("/user/**").hasRole("USER")
             .requestMatchers("/admin/**").hasRole("ADMIN")

@@ -24,12 +24,11 @@ public class LoginController {
 
 
     /**
-     * 테스트 페이지에 대한 엔드포인트입니다.
-     * TODO 추후 에러페이지로 바꿀 예정
+     * 에러 페이지에 대한 엔드포인트입니다.
      */
-    @GetMapping("/test")
+    @GetMapping("/error")
     public String test() {
-        return "view/test";
+        return "view/error";
     }
 
 
@@ -39,7 +38,7 @@ public class LoginController {
      */
     @GetMapping("/")
     public String homepage() {
-        return "view/user/home";
+        return "view/home";
     }
 
 /*

@@ -5,31 +5,140 @@
     <title>대여 목록</title>
     <link rel="stylesheet" href="/css/user-style.css">
     <script>
-
+        /**
+         * '도서 전체 목록'으로 페이지를 이동합니다.
+         */
         function navigateToLibrary() {
             window.location.href = '/user/library';
         }
 
-        function submitForm(url, bookId, method) {
-            const form = document.createElement('form');
+        /**
+         * 예약취소 버튼을 클릭 시, 사용자 확인을 받고 서버에 취소 요청을 전송합니다.
+         *
+         * @param {HTMLElement} button - 클릭된 대출 버튼 요소
+         */
+        function bookReserveCancel(button) {
+            const bookItem = button.closest('.reservation-book-item');
+            const reservationId = bookItem.dataset.reservationId;
+            const bookName = bookItem.dataset.bookName;
 
-            if (method === 'GET' || method === 'POST') {
-                form.method = method;
-
-            } else {
+            let confirmMessage = "[" + bookName + "]의 예약을 취소하시겠습니까?";
+            if(confirm(confirmMessage)) {
+                const form = document.createElement('form');
                 form.method = 'POST';
-                const hiddenMethodField = document.createElement('input');
-                hiddenMethodField.type = 'hidden';
-                hiddenMethodField.name = '_method';
-                hiddenMethodField.value = method;
-                form.appendChild(hiddenMethodField);
-            }
+                form.action = '/user/reserve/' + reservationId;
 
-            form.action = url + bookId;
-            document.body.appendChild(form);
-            form.submit();
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+
+                form.appendChild(methodInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
         }
 
+        /**
+         * 대출 버튼을 클릭 시, 사용자 확인을 받고 서버에 대출 요청을 전송합니다.
+         *
+         * @param {HTMLElement} button - 클릭된 대출 버튼 요소
+         */
+        function bookLoanSubmit(button) {
+            const bookItem = button.closest('.reservation-book-item');
+            const reservationId = bookItem.dataset.reservationId;
+            const bookName = bookItem.dataset.bookName;
+
+            let confirmMessage = "[" + bookName + "]을(를) 대여하시겠습니까?";
+            if(confirm(confirmMessage)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/user/reserve/loan/' + reservationId;
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        /**
+         * 반납 버튼을 클릭 시, 사용자 확인을 받고 서버에 반납 요청을 전송합니다.
+         *
+         * @param {HTMLElement} button - 클릭된 대출 버튼 요소
+         */
+        function bookLoanReturn(button) {
+            const bookItem = button.closest('.loan-book-item');
+            const loanId = bookItem.dataset.loanId;
+            const bookName = bookItem.dataset.bookName;
+
+            let confirmMessage = "[" + bookName + "]을(를) 반납하시겠습니까?";
+            if(confirm(confirmMessage)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "/user/loan/" + loanId;
+
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'PUT';
+
+                form.appendChild(methodInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        /**
+         *
+         */
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth'
+            });
+        }
+    </script>
+    <script>
+        // TODO [공부] DOMContentLoaded 와 onmouseover 비교하기
+        document.addEventListener("DOMContentLoaded", function () {
+            const reserveTooltip = document.getElementById("tooltip-reserve");
+            const loanTooltip = document.getElementById("tooltip-loan");
+            let tooltip;
+
+            document.addEventListener("mouseover", function (event) {
+                const target = event.target.closest(".my-book-title");
+                if (target) {
+                    const bookName = target.querySelector("span").innerText;
+
+                    if (target.closest(".reservation-book-item")) {
+                        tooltip = reserveTooltip;
+                    } else if (target.closest(".loan-book-item")) {
+                        tooltip = loanTooltip;
+                    }
+
+                    if (tooltip) {
+                        tooltip.innerText = bookName;
+                        tooltip.classList.add("show");
+
+                        const rect = target.getBoundingClientRect();
+                        // TODO [공부] position: fixed VS position: absolute(window.scrollX) 비교하기
+                        let left = rect.left;
+                        let top = rect.top;
+
+                        const tooltipWidth = tooltip.offsetWidth;
+                        const windowWidth = window.innerWidth;
+
+                        if (left + tooltipWidth > windowWidth) {
+                            left = rect.right - tooltipWidth + 15;
+                        }
+
+                        tooltip.style.left = `${left-10}px`;
+                        tooltip.style.top = `${top-2}px`;
+
+                        tooltip.addEventListener("mouseleave", function () {
+                            tooltip.classList.remove("show");
+                        });
+                    }
+                }
+            });
+        });
     </script>
 </head>
 <body>
@@ -37,17 +146,14 @@
 <div class="wrap-container">
 
     <div class="header">
-
         <form class="user-nav" action="/logout" method="post">
-            <button th:text="${userInfo}"></button>
-            <span>님 환영합니다.</span>
-            <button type="submit">로그아웃</button>
+            <button th:text="${userInfo}" class="user-nav-name"></button>
+            <span>님 환영합니다 ! 🤗</span>
+            <button class="logout-btn">로그아웃</button>
         </form>
-
         <div class="domain-title">
             <span>도서관리 어플리케이션</span>
         </div>
-
     </div>
 
     <div class="menu-nav">
@@ -57,93 +163,98 @@
         </div>
     </div>
 
-
-
     <div class="my-book-container">
+
         <div class="my-book-menu-title">
             <span>✨ 예약 도서 (<span th:text="${#lists.size(reservation)}"></span>/3)</span>
         </div>
         <div class="book-reservation-area">
-
-            <div th:each="book : ${reservation}" class="reservation-book-item">
+            <div th:each="book : ${reservation}" class="reservation-book-item"
+                 th:data-reservation-id="${book.reservationId}" th:data-book-name="${book.bookName}">
                 <div class="my-book-info">
                     <img th:src="${book.imgPath}" alt="book image" class="my-book-img">
                     <div class="my-book-etc">
                         <div class="my-book-title">
                             <span th:text="${book.bookName}"></span>
                         </div>
+                        <div id="tooltip-reserve" class="tooltip"></div>
                         <div class="book-item-etc">
                             <span th:text="${book.publisher}"></span>
                         </div>
                         <div class="reservation-date">
-                            예약요청일 : <span th:text="${book.reservedAt}" class="highlight-data"></span>
+                            예약 요청일 : <span th:text="${book.reservedAt}" class="highlight-data"></span>
                         </div>
                         <div class="reservation-queue-count">
-                            예약대기자 수 : &nbsp;&nbsp;<span th:text="${book.reservedAt}" class="highlight-data">3</span> 명
+                            <span th:if="${book.waitingRank > 0}">
+                                예약 대기자 : &nbsp;&nbsp;<span th:text="${book.waitingRank}" class="highlight-data"></span> 명
+                            </span>
+                            <span th:if="${book.waitingRank == 0 and book.isReturned == false}" class="highlight-data">
+                                ⌛ 도서 반납 대기 중
+                            </span>
+                            <span th:if="${book.waitingRank == 0 and book.isReturned == true}" class="highlight-data">
+                                👍 대출 가능
+                            </span>
                         </div>
                     </div>
                 </div>
                 <div class="my-book-btn-area">
-                    <button th:onclick="|submitForm('/user/reserve/', ${book.reservationId}, 'DELETE')|"
-                            class="book-item-btn">예약취소</button>
-                    <button th:onclick="|submitForm('/user/reserve/loan/', ${book.reservationId}, 'POST')|"
-                            class="book-item-btn">대여</button>
+                    <button onclick="bookReserveCancel(this)" class="book-item-btn">예약취소</button>
+                    <button onclick="bookLoanSubmit(this)" class="book-item-btn">대여</button>
                 </div>
             </div>
-
-
             <div th:if="${#lists.isEmpty(reservation)}" class="no-my-book-result">
                 <span>예약중인 도서가 없습니다.</span>
             </div>
-
-
-        </div>
-
-
+        </div> <!-- end.book-reservation-area -->
 
         <div class="my-book-menu-title">
             <span>✨ 대출 도서 (<span th:text="${#lists.size(loan)}"></span>/6)</span>
         </div>
-
         <div class="book-loan-area">
-
-            <div th:each="book : ${loan}"  class="loan-book-item">
+            <div th:each="book : ${loan}"  class="loan-book-item"
+                 th:data-loan-id="${book.loanId}" th:data-book-name="${book.bookName}">
                 <div class="my-book-info">
                     <img th:src="${book.imgPath}" alt="book image" class="my-book-img">
                     <div class="my-book-etc">
                         <div class="my-book-title">
                             <span th:text="${book.bookName}"></span>
                         </div>
+                        <div id="tooltip-loan" class="tooltip"></div>
                         <div class="book-item-etc">
                             <span th:text="${book.publisher}"></span>
                         </div>
                         <div class="reservation-date">
-                            대출 시작일 : <span th:text="${book.borrowedAt}" class="highlight-data"></span>
+                            대출 시작일 :
+                            <span th:text="${book.borrowedAt}" class="highlight-data"></span>
                         </div>
                         <div class="reservation-queue-count">
-                            대출 종료일 : <span th:text="${book.dueDate}" class="highlight-data"></span>
+                            대출 종료일 :
+                            <span th:text="${book.dueDate}" th:class="${book.overdueDays > 0} ? 'alert-data' : 'highlight-data'"></span>
                         </div>
                         <div class="reservation-queue-count">
-                            연체일수: &nbsp;&nbsp;<span th:text="${book.overdueDays}" class="highlight-data"></span> 일
+                            연체일: &nbsp;&nbsp;
+                            <span th:text="${book.overdueDays}" th:class="${book.overdueDays > 0} ? 'alert-data' : 'highlight-data'"></span> 일
                         </div>
                     </div>
                 </div>
                 <div class="my-book-btn-area">
-                    <button th:onclick="|submitForm('/user/reserve/', ${book.loanId}, 'PUT')|"
-                            class="book-item-btn">반납</button>
+                    <button onclick="bookLoanReturn(this)" class="book-item-btn">반납</button>
                 </div>
             </div>
-
-
             <div th:if="${#lists.isEmpty(loan)}" class="no-my-book-result">
                 <span>대출중인 도서가 없습니다.</span>
             </div>
+        </div> <!-- end.book-loan-area -->
 
-
-        </div>
     </div>
 
-    <div class="footer"></div>
+    <div class="navigation-button-area">
+        <button id="scrollToTopButton" class="page-up-btn" onclick="scrollToTop()">
+            맨 위로 이동
+            <img src="/img/up.png" class="page-up-img" alt="Page Up Icon">
+        </button>
+    </div>
+
 </div>
 </div>
 </body>

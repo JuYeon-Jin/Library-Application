@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Intege
      * @param loanId 반납할 대출 기록의 ID
      * @return 업데이트된 레코드 수 (성공 시 1, 실패 시 0)
      */
+    @Transactional
     @Modifying
     @Query("UPDATE LoanHistory lh SET lh.isReturned = true" +
            " WHERE lh.loanId = :loanId AND lh.user.userId = :userId AND lh.isReturned = false")

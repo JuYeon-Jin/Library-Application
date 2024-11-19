@@ -1,13 +1,8 @@
 package com.group.libraryapp.project.service;
 
 import com.group.libraryapp.project.domain.book.BookRepository;
-import com.group.libraryapp.project.domain.loan.LoanHistoryRepository;
-import com.group.libraryapp.project.domain.reservation.ReservationRepository;
+import com.group.libraryapp.project.dto.book.BestBookListDTO;
 import com.group.libraryapp.project.dto.book.BookListDTO;
-import com.group.libraryapp.project.dto.security.CustomUserDetails;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +27,18 @@ public class BookService {
      */
     public List<BookListDTO> listAllBooks(String userId, String keyword) {
         return book.findAllWithLoanStatus(userId, keyword);
+    }
+
+
+
+    /**
+     * 대출 횟수가 많은 상위 5개의 도서를 조회하여 {@link BestBookListDTO} 형식으로 반환합니다.
+     * 반환되는 목록은 대출 횟수가 많은 순서대로 정렬되어 있으며, 각 도서에는 대출 순위가 포함됩니다.
+     *
+     * @return 대출 횟수가 많은 상위 5개 도서 목록.
+     */
+    public List<BestBookListDTO> listBest5Books() {
+        return book.findTop5BooksByLoanCount();
     }
 
 

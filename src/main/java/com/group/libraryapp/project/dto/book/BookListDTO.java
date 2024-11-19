@@ -19,11 +19,13 @@ public class BookListDTO {
     private String publishedAt;
     private String registeredAt;
     private boolean isBorrowed;
+    private boolean amIBorrower;
     private boolean isAlreadyReserved;
     private String imgPath;
+    private Long totalReservations;
 
     public BookListDTO(int bookId, String bookName, String writer, String publisher, LocalDate publishedAt, LocalDateTime registeredAt, String imgPath,
-                       boolean isBorrowed, boolean isAlreadyReserved) {
+                       boolean isBorrowed, boolean amIBorrower, boolean isAlreadyReserved, Long totalReservations) {
         this.bookId = bookId;
         this.bookName = bookName;
         this.writer = writer;
@@ -31,7 +33,9 @@ public class BookListDTO {
         this.publishedAt = publishedAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.registeredAt = registeredAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.isBorrowed = isBorrowed;
+        this.amIBorrower = amIBorrower;
         this.isAlreadyReserved = isAlreadyReserved;
         this.imgPath = imgPath;
+        this.totalReservations = totalReservations;
     }
 }

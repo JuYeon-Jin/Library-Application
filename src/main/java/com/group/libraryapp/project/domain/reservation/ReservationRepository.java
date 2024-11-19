@@ -1,7 +1,5 @@
 package com.group.libraryapp.project.domain.reservation;
 
-import com.group.libraryapp.project.dto.book.BookListDTO;
-import com.group.libraryapp.project.dto.loan.BorrowedBookDTO;
 import com.group.libraryapp.project.dto.reservation.ReservedBookDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,19 +22,23 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
      */
     @Query(value = """
         SELECT new com.group.libraryapp.project.dto.reservation.ReservedBookDTO(
-            r.reservationId, r.book.bookId, b.bookName, b.publisher, b.imgPath, r.reservedAt,
-            (SELECT COUNT(r2) + 1
+            r.reservationId, r.book.bookId, b.bookName, b.publisher, b.imgPath, r.reservedAt, lh.isReturned,
+            (SELECT COUNT(r2) + 0
              FROM Reservation r2
              WHERE r2.book.bookId = r.book.bookId
              AND r2.reservedAt < r.reservedAt)
         )
         FROM Reservation r
-        JOIN r.book b
+            JOIN r.book b
+            LEFT JOIN LoanHistory lh ON lh.book.bookId = r.book.bookId
+                AND lh.loanId = (SELECT MAX(lh2.loanId)
+                                 FROM LoanHistory lh2
+                                 WHERE lh2.book.bookId = r.book.bookId)
         WHERE r.user.userId = :inputUserId
         ORDER BY r.reservationId
     """)
     List<ReservedBookDTO> listMyReservedBooks(@Param("inputUserId") String userId);
-
+// TODO [공부] COUNT(r2) + 0 에서 +0 을 빼면 난리남.
 
 
     /**

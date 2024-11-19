@@ -4,6 +4,23 @@
     font-weight: 400;
     font-style: normal;
 }
+@font-face {
+    font-family: 'IBMPlexSansKR-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --color-font-hover-green: #6EB274;
+    --color-font-hover-dark-green: #389F2C;
+    --color-dark-button: #63AC1B;
+
+    --color-dark-gray: #717171;
+    --color-disabled: #F1F1F1; /* 비활성화 버튼 색 */
+
+    --color-highlight: #86BCBF; /* 검색 포커스 색 */
+}
 
 div, a, span, input, button { font-family: Pretendard; }
 
@@ -28,7 +45,7 @@ body {
 .header,
 .menu-nav,
 .book-list-container,
-.footer {
+.navigation-button-area {
     width: 1020px;
     margin: auto;
 }
@@ -42,20 +59,29 @@ body {
 
 .user-nav {
     position: absolute;
-    top: 14px;
+    top: 15px;
     right: 25px;
 
     text-align: end;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .user-nav button {
     border: none;
     background: none;
-    font-size: 15px;
+    font-size: 14px;
 }
 
-.user-nav button:hover {
+.user-nav-name:hover {
+    color: var(--color-font-hover-dark-green);
+    font-weight: bold;
+}
+
+.logout-btn {
+    margin-left: 22px;
+}
+
+.logout-btn:hover {
     font-weight: bold;
 }
 
@@ -83,14 +109,14 @@ body {
 
 .category-nav button:hover {
     font-weight: bold;
-    color: #6EB274;
+    color: var(--color-font-hover-green);
 }
 
 .category-nav button:disabled {
     font-weight: bold;
-    color: #6EB274;
+    color: var(--color-font-hover-green);
     padding-bottom: 15px;
-    border-bottom: 2px solid #6EB274;
+    border-bottom: 2px solid var(--color-font-hover-green);
 }
 
 .search-book {
@@ -108,7 +134,7 @@ body {
 }
 
 .search-book input:focus {
-    border-color: #86BCBF;
+    border-color: var(--color-highlight);
 }
 
 .search-book input::placeholder {
@@ -137,7 +163,8 @@ body {
     display: grid;
     grid-template-columns: 7fr 3fr;
     grid-template-rows: 1fr;
-    gap: 30px;
+    gap: 50px;
+    margin-bottom: 80px;
 }
 
 .book-list-area {
@@ -150,7 +177,7 @@ body {
     align-items: center;
     grid-template-columns: 1fr 5fr 1fr;
     height: 190px;
-    gap: 15px;
+    gap: 20px;
     border-bottom: 1px solid lightgray;
 }
 
@@ -175,6 +202,22 @@ body {
     color: gray;
 }
 
+.book-item-etc span {
+    font-family: IBMPlexSansKR-Regular !important;
+    letter-spacing: 0.02em;
+}
+
+.book-item-status {
+    margin-top: 13px;
+}
+
+.book-item-status span {
+    font-family: IBMPlexSansKR-Regular !important;
+    letter-spacing: 0.02em;
+    font-size: 14px;
+    color: var(--color-dark-gray);
+}
+
 .book-item-btn-area {
     display: flex;
     flex-direction: column;
@@ -187,7 +230,7 @@ body {
 
     border: none;
     border-radius: 4px;
-    background-color: #63AC1B;
+    background-color: var(--color-dark-button);
     color: white;
 }
 
@@ -196,7 +239,7 @@ body {
 }
 
 .book-item-btn:disabled {
-    background-color: #F1F1F1;
+    background-color: var(--color-disabled);
     color: gray;
     pointer-events: none;
 }
@@ -208,6 +251,19 @@ body {
 .best-book-area-title {
     font-size: 18px;
     margin-top: 23px;
+    margin-bottom: 5px;
+}
+
+.next-book-btn {
+    background: none;
+    border: none;
+    margin-left: 10px;
+    font-size: 15px;
+}
+
+.next-book-btn:hover {
+    font-weight: bold;
+    color: var(--color-font-hover-dark-green);
 }
 
 .select-book {
@@ -239,12 +295,13 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 17px;
+    gap: 14px 0;
+    padding-right: 48px;
 }
 
 .rank-book-item {
     position: relative;
-    width: 95px;
+    width: 89px;
     height: 140px;
 }
 
@@ -324,11 +381,11 @@ body {
 }
 
 .reservation-book-item {
-    height: 220px;
+    height: 190px;
 }
 
 .loan-book-item {
-    height: 246px;
+    height: 216px;
 }
 
 .reservation-book-item:not(:nth-child(3n)):not(:last-child),
@@ -353,20 +410,32 @@ body {
 
 .my-book-title {
     font-size: 16px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .reservation-date {
-    margin-top: 12px;
+    margin-top: 15px;
     font-size: 14px;
 }
 
 .reservation-queue-count {
-    margin-top: 3px;
+    margin-top: 2px;
     font-size: 14px;
 }
 
 .highlight-data {
-    color: #FF8C00;
+    color: var(--color-font-hover-green);
+    font-family: IBMPlexSansKR-Regular !important;
+    letter-spacing: 0.02em;
+}
+
+.alert-data {
+    color: red;
+    font-family: IBMPlexSansKR-Regular !important;
+    letter-spacing: 0.02em;
 }
 
 .no-my-book-result {
@@ -382,10 +451,62 @@ body {
 .my-book-btn-area {
     display: flex;
     justify-content: center;
-    margin-top: 35px;
+    margin-top: 17px;
     gap: 10px;
 }
 
 .my-book-btn-area button {
     width: 100px;
+}
+
+.navigation-button-area {
+    width: 1020px;
+    margin: 40px 0 60px 0;
+
+    display: flex;
+    justify-content: center;
+}
+
+.page-up-btn {
+    height: 30px;
+    width: 1020px;
+    padding: 0 14px;
+    border: none;
+    background: none;
+    font-size: 13px;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.page-up-btn:hover {
+    color: var(--color-font-hover-dark-green);
+    cursor: pointer;
+}
+
+.page-up-img {
+    width: 20px;
+    height: auto;
+    margin-top: -3px;
+}
+
+.tooltip {
+    min-width: 190px;
+    position: fixed;
+    background-color: rgb(156, 201, 156);
+    color: white;
+    font-size: 16px;
+    padding: 2px 9px;
+    border-radius: 5px;
+    z-index: 9999;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+}
+
+.tooltip.show {
+    opacity: 1;
+    visibility: visible;
 }
