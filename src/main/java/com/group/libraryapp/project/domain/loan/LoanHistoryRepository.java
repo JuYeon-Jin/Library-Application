@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Intege
      * @param loanId 반납할 대출 기록의 ID
      * @return 업데이트된 레코드 수 (성공 시 1, 실패 시 0)
      */
+    @Transactional
     @Modifying
     @Query("UPDATE LoanHistory lh SET lh.isReturned = true" +
            " WHERE lh.loanId = :loanId AND lh.user.userId = :userId AND lh.isReturned = false")
@@ -57,6 +59,7 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Intege
     * */
 
 
+
     /**
      * 특정한 도서의 대출 상태를 확인합니다.
      * `isReturned`가 `false`인 상태의 대출 기록이 존재하면, 해당 도서는 대출 중임을 의미하며
@@ -70,9 +73,20 @@ public interface LoanHistoryRepository extends JpaRepository<LoanHistory, Intege
 
 
     /**
+     * 사용자가 대출한 도서 중 반납되지 않은(`isReturned = false`) 도서의 수를 반환합니다.
+     * 특정 사용자가 현재 대출 중인 도서가 몇 권인지 확인하는 데 사용합니다.
+     *
+     * @param userId 대출 도서 수를 확인하려는 사용자의 ID
+     * @return 현재 대출 중인 도서의 수
+     */
+    long countByUser_UserIdAndIsReturnedFalse(String userId);
+
+
+
+    /**
      * 다음 조건을 확인하여 특정 도서의 예약 불가 여부를 반환합니다.
      * 내부 쿼리가 결과를 반환하지 않으면 NOT EXISTS 는 true 를 반환하므로
-     * ※ SELECT 1 : 특정 조건을 만족하면 레코드에 값 1 로 표시함. 레코드의 존재 여부만을 확인할 때 사용 함.
+     * ※ SELECT 1 : 특정 조건을 만족하면 레코드에 값 1 로 표시함. 레코드의 존재 여부만을 확인할 때 사용합니다.
      *
      * 1. 도서의 대출 상태 → 대출이 가능한 상태
      * 2. 도서의 예약 상태 → 해당 도서의 예약자가 없는 상태

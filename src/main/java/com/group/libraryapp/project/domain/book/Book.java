@@ -19,13 +19,13 @@ public class Book {
     @Column(nullable = false, name = "book_name")
     private String bookName;
 
-    @Column(nullable = false, length = 50)
-    private String writer;
+    @Column(nullable = false, length = 80)
+    private String author;
 
     @Column(nullable = false, length = 50)
     private String publisher;
 
-    @Column(nullable = false, name = "img_path", length = 50)
+    @Column(nullable = false, name = "img_path")
     private String imgPath;
 
     @Column(nullable = false, name = "published_at")
@@ -45,13 +45,12 @@ public class Book {
      * 도서등록용 생성자입니다.
      * TODO [공부] 접근자와 생성자의 차이
      */
-    public Book(String bookName, String writer, String publisher, String imgPath, LocalDate publishedAt) {
+    public Book(String bookName, String author, String publisher, String imgPath, LocalDate publishedAt) {
         this.bookName = bookName;
-        this.writer = writer;
+        this.author = author;
         this.publisher = publisher;
         this.publishedAt = publishedAt;
         this.imgPath = imgPath;
         this.registeredAt = LocalDateTime.now();
     }
-
 }

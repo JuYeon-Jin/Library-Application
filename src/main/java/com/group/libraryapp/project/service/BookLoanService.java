@@ -42,6 +42,7 @@ public class BookLoanService {
     }
 
 
+
     /**
      * 대출 조건울 만족하는 경우, 대출 처리를 수행합니다.
      * 선순위 예약자인 경우라면 예약을 취소하고 자동으로 대출을 진행합니다.
@@ -56,7 +57,8 @@ public class BookLoanService {
      * @param bookId 대출하려는 책의 ID
      * @throws UserNotFoundException 해당 사용자가 존재하지 않는 경우
      * @throws BookNotFoundException 해당 책이 존재하지 않는 경우
-     * @throws PriorReservationExistsException 이미 대출 중인 책이거나, 선순위 예약자가 존재하는 경우
+     * @throws UnavailableBorrowedException 이미 대출 중인 책이거나, 대출 가능 권 수를 초과하는 경우
+     * @throws PriorReservationExistsException 선순위 예약자가 존재하는 경우
      */
     public void borrowBook(String userId, int bookId) {
         User user = userRepository.findById(userId)
@@ -66,7 +68,12 @@ public class BookLoanService {
 
         boolean isAlreadyLoaned = loanRepository.existsByBook_BookIdAndIsReturnedFalse(bookId);
         if (isAlreadyLoaned) {
-            throw new PriorReservationExistsException("이 책은 이미 대출 중입니다.");
+            throw new UnavailableBorrowedException("이 책은 이미 대출 중입니다.");
+        }
+
+        long userLoanCount = loanRepository.countByUser_UserIdAndIsReturnedFalse(userId);
+        if (userLoanCount >= 6) {
+            throw new UnavailableBorrowedException("도서 대여는 최대 6권까지 가능합니다.");
         }
 
         Reservation reservation = reservationRepository.findFirstReservationByBookId(bookId);
@@ -81,6 +88,7 @@ public class BookLoanService {
         LoanHistory loanHistory = new LoanHistory(user, book);
         loanRepository.save(loanHistory);
     }
+
 
 
     /**
@@ -101,6 +109,7 @@ public class BookLoanService {
     }
 
 
+
     /**
      * 예약 ID로 예약을 조회하여 사용자 본인의 예약이 맞는지 확인 한 후 대출 진행합니다.
      * 예약 취소와 대출 수행은 borrowBook() 에서 진행하며, 예약 기록을 찾을 수 없는 경우 예외를 던집니다.
@@ -110,6 +119,12 @@ public class BookLoanService {
      * @throws ReservationNotFoundException 해당 예약이 존재하지 않거나, 예약자가 아닌 경우
      */
     public void proceedReservationToCheckout(String userId, int reservationId) {
+
+        long userLoanCount = loanRepository.countByUser_UserIdAndIsReturnedFalse(userId);
+        if (userLoanCount >= 6) {
+            throw new UnavailableBorrowedException("도서 대여는 최대 6권까지 가능합니다.");
+        }
+
         Reservation reservation = reservationRepository.findById(reservationId)
                 .filter(r -> r.getUser().getUserId().equals(userId))
                 .orElseThrow(() -> new ReservationNotFoundException("예약을 찾을 수 없습니다. 상태를 확인해주세요."));

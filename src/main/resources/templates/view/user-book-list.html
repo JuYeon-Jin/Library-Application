@@ -1,43 +1,146 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>전체 목록</title>
     <link rel="stylesheet" href="/css/user-style.css">
     <script>
-
+        /**
+         * '나의 도서 목록'으로 페이지를 이동합니다.
+         */
         function navigateToMyBook() {
             window.location.href = '/user/my-book';
         }
 
-        function submitForm(url, bookId) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = url + bookId;
+        /**
+         * 대출 버튼을 클릭 시, 사용자 확인을 받고 서버에 대출 요청을 전송합니다.
+         *
+         * @param {HTMLElement} button - 클릭된 대출 버튼 요소
+         */
+        function bookLoanSubmit(button) {
+            const bookItem = button.closest('.book-item');
+            const bookId = bookItem.dataset.bookId;
+            const bookName = bookItem.dataset.bookName;
 
-            document.body.appendChild(form);
-            form.submit();
+            let confirmMessage = "[" + bookName + "]을(를) 대여하시겠습니까?";
+            if(confirm(confirmMessage)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "/user/loan/" + bookId;
+
+                document.body.appendChild(form);
+                form.submit();
+            }
         }
 
+        /**
+         * 예약 버튼을 클릭 시, 사용자 확인을 받고 서버에 예약 요청을 전송합니다.
+         *
+         * @param {HTMLElement} button - 클릭된 대출 버튼 요소
+         */
+        function bookReserveSubmit(button) {
+            const bookItem = button.closest('.book-item');
+            const bookId = bookItem.dataset.bookId;
+            const bookName = bookItem.dataset.bookName;
+
+            let confirmMessage = "[" + bookName + "]을(를) 예약하시겠습니까?";
+            if(confirm(confirmMessage)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "/user/reserve/" + bookId;
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+    <script th:inline="javascript">
+
+        /**
+         * [[${best}]] 는 주석이 아니라 Thymeleaf 표현식으로,
+         * 서버에서 전달된 best 변수 값이 자바스크립트 배열로 삽입됩니다.
+         */
+        let bestBooks = /*[[${best}]]*/ [];
+
+
+        /**
+         * bestBooks 배열을 기반으로 select-book 과 rank-book <div> 를 랜더링합니다.
+         */
+        function updateBestBooksView() {
+            const selectBookContainer = document.querySelector('.select-book');
+            const rankBookContainer = document.querySelector('.rank-book');
+            renderSelectBook(selectBookContainer);
+            renderRankBooks(rankBookContainer);
+        }
+
+        /**
+         * bestBooks 배열의 첫번째 요소를 select-book 에 innerHtml 로 삽입합니다.
+         */
+        function renderSelectBook(container) {
+            const firstBook = bestBooks[0];
+            container.innerHTML = `
+                <img src="${firstBook.imgPath}" alt="book image" class="select-book-img">
+                <div class="select-book-info">
+                    <span>${firstBook.bookRank}</span>
+                    <span>${firstBook.bookName}</span>
+                    <span>${firstBook.author}</span>
+                </div>
+            `;
+
+        }
+
+        /**
+         * bestBooks.slice(1) 를 통해 bestBooks 배열의 첫번째 요소를 제외한 나머지 요소를
+         * join('') 으로 연결하여 rank-book 에 innerHtml 로 삽입합니다.
+         */
+        function renderRankBooks(container) {
+            container.innerHTML = bestBooks.slice(1).map(book => `
+                <div class="rank-book-item">
+                    <span class="rank-number">${book.bookRank}</span>
+                    <img src="${book.imgPath}" alt="book image" class="rank-book-img">
+                </div>
+            `).join('');
+        }
+
+        /**
+         * 배열의 첫번째 요소를 맨 뒤로 이동시킨 후
+         * updateBestBooksView() 를 호출하여 화면을 다시 랜더링합니다.
+         */
+        function rotateRight() {
+            bestBooks.push(bestBooks.shift());
+            updateBestBooksView();
+        }
+
+        /**
+         * HTML 문서의 DOM 구조만 준비되었을 때 updateBestBooksView()를 호출하여
+         * select-book 과 rank-book <div> 를 랜더링합니다.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            updateBestBooksView();
+        });
+
+        /* TODO [공부] DOMContentLoaded 방식과 스크립트 방식의 차이
+        ※ addEventListener('click', (e) => {...}): 선택한 요소에 특정 이벤트가 발생할 때 실행될 함수를 등록.
+                                                    document 는 웹 페이지의 HTML 문서를 나타내는 객체로 document.addEventListener()를 사용하면,
+                                                    HTML 문서 전체에서 발생하는 이벤트를 감지할 수 있다.
+        ※ DOMContentLoaded:  브라우저가 HTML 문서를 완전히 로드하고 DOM 트리를 생성했을 때 발생
+                             (CSS 나 이미지 같은 리소스의 로드가 완료되를 기다리지 않고 DOM 구조만 로드되면 실행)
+        * */
     </script>
 </head>
 <body>
-
 <div class="container">
 <div class="wrap-container">
 
     <div class="header">
-
-        <div class="user-nav">
-            <button th:text="${userInfo}"></button>
-            <span>님 환영합니다.</span>
-            <button>로그아웃</button>
-        </div>
-
+        <form class="user-nav" action="/logout" method="post">
+            <button th:text="${userInfo}" class="user-nav-name"></button>
+            <span>님 환영합니다 ! 🤗</span>
+            <button class="logout-btn">로그아웃</button>
+        </form>
         <div class="domain-title">
             <span>도서관리 어플리케이션</span>
         </div>
-
     </div>
 
     <div class="menu-nav">
@@ -45,7 +148,7 @@
             <button disabled>전체 도서 목록</button>
             <button onclick="navigateToMyBook()">나의 도서 목록</button>
         </div>
-        <form action="/user/library" method="get" class="search-book">
+        <form action="/user/library" method="GET" class="search-book">
             <input name="keyword" placeholder="도서명 검색">
             <button type="submit">
                 <img src="/img/glass.png" alt="book image" class="search-img">
@@ -53,29 +156,41 @@
         </form>
     </div>
 
-
     <div class="book-list-container">
 
         <div class="book-list-area">
-
-            <div th:each="book : ${books}" class="book-item">
+            <div th:each="book : ${books}" class="book-item"
+                 th:data-book-id="${book.bookId}" th:data-book-name="${book.bookName}">
                 <img th:src="${book.imgPath}" alt="book image" class="book-item-img">
                 <div class="book-item-info">
                     <div>
                         <span th:text="${book.bookName}" class="book-item-title"></span>
                     </div>
                     <div class="book-item-etc">
-                        <span th:text="${book.writer}"></span> ·
+                        <span th:text="${book.author}"></span> ·
                         <span th:text="${book.publisher}"></span> ·
                         <span th:text="${book.publishedAt}"></span>
-                    </div><!-- TODO 도서의 현재 상태 추가 -->
+                    </div>
+                    <div class="book-item-status">
+                        <span>대출 가능 여부: </span>
+                        <span th:if="${book.isBorrowed and !book.amIBorrower}" th:text="'대출 중'"></span>
+                        <span th:if="${book.amIBorrower}" th:text="|대출 중 (${userInfo})|"></span>
+                        <span th:if="${!book.isBorrowed and !book.amIBorrower}" th:text="'대출 가능'"></span>
+                        <span>&nbsp; | &nbsp; 예약: </span>
+                        <span th:if="${!book.isAlreadyReserved}" th:text="|${book.totalReservations} 명|"></span>
+                        <span th:if="${book.isAlreadyReserved}" th:text="|예약됨 (${userInfo})|"></span>
+                    </div>
                 </div>
                 <div class="book-item-btn-area">
-                    <button th:disabled="${book.isBorrowed}"
-                            th:onclick="|submitForm('/user/loan/', ${book.bookId})|"
+                    <!-- 대출이 가능하려면 -->
+                    <!-- 대출이 불가능한 상황 1. 대출 중 인경우, 2. 예약자가 존재하는 경우 -->
+                    <button th:disabled="${book.isBorrowed} or ${book.totalReservations} > 0"
+                            onclick="bookLoanSubmit(this)"
                             class="book-item-btn">대여</button>
-                    <button th:disabled="${not book.isBorrowed or book.isAlreadyReserved}"
-                            th:onclick="|submitForm('/user/reserve/', ${book.bookId})|"
+                    <!-- 예약이 가능하려면 -->
+                    <!-- 예약이 불가능한 상황 1. 대출이 가능한 경우, 2. 내가 대출중인 경우 3. 내가 예약중인 경우 -->
+                    <button th:disabled="(${not book.isBorrowed and book.totalReservations == 0}) or ${book.amIBorrower} or ${book.isAlreadyReserved}"
+                            onclick="bookReserveSubmit(this)"
                             class="book-item-btn">예약</button>
                 </div>
             </div>
@@ -85,42 +200,19 @@
                 <span>' <span th:text="${keyword}"></span> ' 도서 검색 결과가 없습니다.</span>
                 <span>검색어의 철자가 정확한지 다시 한 번 확인해주세요.</span>
             </div>
-
         </div>
-
 
         <div class="best-book-area">
-            <div class="best-book-area-title"><span>베스트✨ 도서</span></div>
-            <div class="select-book">
-                <img src="/img/book-img/10-test.jpg" alt="book image" class="select-book-img" >
-                <div class="select-book-info">
-                    <span>01</span>
-                    <span>제목</span>
-                    <span>저자</span>
-                </div>
+            <div class="best-book-area-title">
+                <span>베스트 ✨ </span>
+                <button class="next-book-btn" onclick="rotateRight()"> 〉</button>
             </div>
-            <div class="rank-book">
-                <div class="rank-book-item">
-                    <span class="rank-number">2</span>
-                    <img src="/img/book-img/10-test.jpg" alt="book image" class="rank-book-img">
-                </div>
-                <div class="rank-book-item">
-                    <span class="rank-number">3</span>
-                    <img src="/img/book-img/10-test.jpg" alt="book image" class="rank-book-img">
-                </div>
-                <div class="rank-book-item">
-                    <span class="rank-number">4</span>
-                    <img src="/img/book-img/10-test.jpg" alt="book image" class="rank-book-img">
-                </div>
-                <div class="rank-book-item">
-                    <span class="rank-number">5</span>
-                    <img src="/img/book-img/10-test.jpg" alt="book image" class="rank-book-img">
-                </div>
-            </div>
+            <div class="select-book"></div>
+            <div class="rank-book"></div>
         </div>
+
     </div>
 
-    <div class="footer"></div>
 </div>
 </div>
 </body>

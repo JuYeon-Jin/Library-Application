@@ -1,11 +1,13 @@
 package com.group.libraryapp.project.controller;
 
+import com.group.libraryapp.project.dto.error.ErrorResponseDTO;
 import com.group.libraryapp.project.dto.user.SignUpDTO;
 import com.group.libraryapp.project.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -24,12 +26,19 @@ public class LoginController {
 
 
     /**
-     * 테스트 페이지에 대한 엔드포인트입니다.
-     * TODO 추후 에러페이지로 바꿀 예정
+     * 에러 페이지에 대한 엔드포인트입니다.
      */
-    @GetMapping("/test")
-    public String test() {
-        return "view/test";
+    @GetMapping("/error")
+    public String errorPage(Model model) {
+        ErrorResponseDTO errorResponse = (ErrorResponseDTO) model.asMap().get("errorResponse");
+
+        if (errorResponse.getCode() < 10) {
+            model.addAttribute("role", "user");
+        } else if (errorResponse.getCode() >= 10) {
+            model.addAttribute("role", "admin");
+        }
+        model.addAttribute("errorMessage", errorResponse.getMessage());
+        return "view/error-page";
     }
 
 
@@ -39,7 +48,7 @@ public class LoginController {
      */
     @GetMapping("/")
     public String homepage() {
-        return "view/user/home";
+        return "view/home";
     }
 
 /*

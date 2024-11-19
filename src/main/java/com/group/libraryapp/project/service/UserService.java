@@ -63,15 +63,6 @@ public class UserService {
     }
 
 
-    // TODO 클라이언트에서 자바스크립트로 입력 검증 필요
     // TODO 트랜잭션 적용할지에 대한 고민 (필요성, 효율성 등)
-
-    /* *
     // TODO 관리자 - 전체 유저 목록 확인 (정렬 추가)
-    public List<UserDTO> userList() {
-        return  userRepository.findByDeletedFalseAndRole("ROLE_USER").stream()
-                .map(UserDTO::new)
-                .collect(Collectors.toList());
-    }
-    */
 }

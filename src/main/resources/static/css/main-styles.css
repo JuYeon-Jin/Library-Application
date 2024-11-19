@@ -1,0 +1,315 @@
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+:root {
+    --blue01: #004B8E;
+    --gold01: #fed41b;
+    --gold02: #ffd700;
+}
+
+/* ---------------------- 공용 ---------------------- */
+div, a, li, span, input { font-family: Pretendard; }
+
+body { margin: 0; }
+
+.container {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    /* flex: (flex-grow) (flex-shrink) (flex-basis)
+       flex-direction: column 일때 flex-basis 는 부모 높이의 0%
+                       row 일때 부모 너비의 0%
+    */
+    flex: 0 0 25%;
+    display: flex;
+    align-items: flex-end;
+
+    font-size: 48px;
+    margin-bottom: 3%;
+}
+
+.main-container,
+.main-container2 {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+
+    margin-bottom: 6%;
+    gap: 11%;
+}
+
+.main-container {
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+Button {
+    color: white;
+    background-color: var(--blue01);
+    border: none;
+}
+
+Button:hover {
+    background-color: var(--gold01);
+}
+
+Button:active {
+    font-weight: bold;
+}
+
+button:disabled {
+    background-color: #d3d3d3;
+    color: black;
+    cursor: not-allowed;
+}
+
+input {
+    padding-left: 3%;
+
+    border-radius: 2px;
+    border: none;
+    outline: none;
+
+    background-color: #E6E6E6;
+}
+
+input:focus {
+    border: none;
+    background-color: #ffff83;
+}
+
+/* ------------------- 최초 접속 화면 ------------------- */
+.mini-container-outline {
+    width: 400px;
+    height: 340px;
+
+    text-align: center;
+}
+
+.title26 {
+    font-size: 26px;
+}
+
+.signup-form,
+.sign-in-form {
+    width: 100%;
+    height: 59%;
+    margin-top: 10%;
+
+    border-radius: 8px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6%;
+}
+
+.signup-form {
+    border: none;
+    background-color: #85a3c5;
+}
+
+.sign-in-form {
+    border: 3px solid var(--blue01);
+}
+
+.user-input-box {
+    width: 73%;
+    display: flex;
+}
+
+.user-input-box div {
+    display: flex;
+    align-items: center;
+
+    width: 32%;
+    font-size: 19px;
+}
+
+.user-input-box input {
+    width: 67%;
+    height: 25px;
+}
+
+.user-btn {
+    width: 160px;
+    height: 28px;
+    margin-top: 5%;
+
+    font-size: 15px;
+    border-radius: 12px;
+}
+
+/* ------------------- 기능 접속 화면 ------------------- */
+.large-container-outline {
+    border: 4px solid var(--blue01);
+    border-radius: 8px;
+
+    width: 810px;
+    height: 400px;
+}
+
+nav {
+    background-color: var(--blue01);
+    color: white;
+    padding: 12px 17px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start;
+    gap: 19px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: white;
+    letter-spacing: 0.06em;
+}
+
+nav ul li a.active, nav ul li a:hover {
+    color: var(--gold02);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+/* ------------------- 도서 등록 화면 ------------------- */
+.content-book-regi {
+    height: 89%;
+    justify-content: center;
+    align-items: center;
+}
+
+.book-input-box {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+}
+
+.book-span {
+    display: flex;
+    align-items: center;
+
+    font-size: 22px;
+}
+
+.book-input {
+    width: 64%;
+    height: 30px;
+    margin-left: 5%;
+}
+
+.book-btn {
+    margin-top: 7%;
+    width: 220px;
+    height: 32px;
+
+    font-size: 15px;
+    border-radius: 12px;
+}
+
+
+/* ------------------- 리스트 화면 ------------------- */
+
+/* --------- 시작 - 웹킷 기반 브라우저에서 스크롤바 스타일링 */
+.content-lists {
+    height: 83%;
+    overflow-y: scroll;
+}
+/*::-webkit-scrollbar {
+      width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+  }*/
+
+/* --------- 끝   - 웹킷 기반 브라우저에서 스크롤바 스타일링 */
+
+
+.titles,
+.lists {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+    font-size: 16px;
+}
+
+.titles {
+    font-weight: bold;
+    background-color: white;
+
+    position: sticky;
+    top: 0px;
+}
+
+.titles span {
+    line-height: 66px;
+}
+
+.lists {
+    margin-bottom: 14px;
+}
+
+.btnGap {
+    width: 14%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+}
+
+.bookBtn {
+    width: 44px;
+    border-radius: 7px;
+}
+
+.width68 {width: 68%;}
+.width50 {width: 50%;}
+.width42 {width: 42%;}
+.width22 {width: 22%;}
+.width18 {width: 18%;}
+.width16 {width: 16%;}
+.width15 {width: 15%;}
+.width12 {width: 12%;}
+.width10 {width: 10%;}
+.width7 {width: 7%;}

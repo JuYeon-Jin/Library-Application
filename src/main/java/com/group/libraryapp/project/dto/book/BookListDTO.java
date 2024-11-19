@@ -14,24 +14,19 @@ import java.time.format.DateTimeFormatter;
 public class BookListDTO {
     private int bookId;
     private String bookName;
-    private String writer;
+    private String author;
     private String publisher;
     private String publishedAt;
     private String registeredAt;
-    private boolean isBorrowed;
-    private boolean isAlreadyReserved;
     private String imgPath;
 
-    public BookListDTO(int bookId, String bookName, String writer, String publisher, LocalDate publishedAt, LocalDateTime registeredAt, String imgPath,
-                       boolean isBorrowed, boolean isAlreadyReserved) {
+    public BookListDTO(int bookId, String bookName, String author, String publisher, LocalDate publishedAt, LocalDateTime registeredAt, String imgPath) {
         this.bookId = bookId;
         this.bookName = bookName;
-        this.writer = writer;
+        this.author = author;
         this.publisher = publisher;
         this.publishedAt = publishedAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-        this.registeredAt = registeredAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.isBorrowed = isBorrowed;
-        this.isAlreadyReserved = isAlreadyReserved;
+        this.registeredAt = registeredAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         this.imgPath = imgPath;
     }
 }

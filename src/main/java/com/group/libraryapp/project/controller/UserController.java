@@ -28,13 +28,16 @@ public class UserController {
         this.reservationService = reservationService;
     }
 
+    // TODO 대출 시점에 대출한 권수 체크, 예약 시점에 예약한 권 수 체크
+    // TODO throw 예외 던질때 페이지 처리 어떻게 할지 정하기
+    //      1. alert 으로 경고창 띄운 후 기존 페이지 유지 및 이동
+    //      2. 에러페이지로 이동
 
     /**
      * '도서 전체 목록'을 조회하여 '인증된 사용자 닉네임', '검색어(존재할 시)' 도 같이 뷰에 담아 반환합니다.
      * 검색 키워드가 존재하면 필터링 된 도서 목록이 조회됩니다.
      *
      * @param keyword 검색 키워드 (선택 사항, 없을 경우 전체 목록 조회)
-     * @param model   뷰에 전달할 데이터를 담는 객체
      * @return 사용자 도서 전체 목록 페이지 뷰 이름
      */
     @GetMapping("/library")
@@ -42,10 +45,9 @@ public class UserController {
                                Model model) {
 
         model.addAttribute("userInfo", getSecurityUsername());
-        model.addAttribute("books", bookService.listAllBooks(getSecurityUserId(), keyword));
+        model.addAttribute("books", bookService.listAllBooksForUsers(getSecurityUserId(), keyword));
+        model.addAttribute("best", bookService.listBest5Books());
         model.addAttribute("keyword", keyword);
-        // TODO 인기도서 5개, (1순위 대출기록 순, 2순위 BookId)
-        // TODO 대출버튼, 예약버튼 active 상태에 대해 로직 다시 고민하기
 
         return "view/user-book-list";
     }
@@ -55,7 +57,6 @@ public class UserController {
      * 사용자가 '대여한 도서'와 '예약한 도서'를 List<dto> 형태로 조회하여 뷰에 담아 반환합니다.
      * '인증된 사용자 닉네임' 도 같이 뷰에 담아 반환합니다.
      *
-     * @param model 뷰에 전달할 데이터를 담는 객체
      * @return 사용자 대여 및 예약 도서 목록 페이지의 뷰 이름
      */
     @GetMapping("/my-book")
@@ -125,6 +126,7 @@ public class UserController {
      */
     @PostMapping("/reserve/{bookId}")
     public String reserveBook(@PathVariable int bookId) {
+
         reservationService.reservationBook(getSecurityUserId(), bookId);
         return "redirect:/user/my-book";
     }
@@ -139,6 +141,7 @@ public class UserController {
      */
     @DeleteMapping("/reserve/{reserveId}")
     public String cancelReserve(@PathVariable int reserveId) {
+
         reservationService.cancelReservation(getSecurityUserId(), reserveId);
         return "redirect:/user/my-book";
     }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,94 +24,123 @@ public class GlobalExceptionHandler {
 
     // 1. 중복된 ID
     @ExceptionHandler(DuplicateUsernameException.class)
-    public ResponseEntity<ErrorResponseDTO> handleDuplicateUsername(DuplicateUsernameException e) {
+    public ResponseEntity<ErrorResponseDTO> handleDuplicateUsername(DuplicateUsernameException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_01",
-                e.getMessage()
+                1, e.getMessage()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
+    // TODO 유저 회원가입 시 에러페이지는 return ResponseEntity
 
     // 2. 입력값 검증 오류
     @ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<ErrorResponseDTO> handleInvalidInput(InvalidFormatException e) {
+    public String handleInvalidInput(InvalidFormatException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_02",
-                e.getMessage()
+                2, e.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
     }
 
     // 3. userId로 조회한 유저 데이터 없음
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleUserNotFound(UserNotFoundException e) {
+    public String handleUserNotFound(UserNotFoundException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_03",
-                e.getMessage()
+                3, e.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
     }
 
     // 4. bookId로 조회한 책 없음
     @ExceptionHandler(BookNotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleBookNotFound(BookNotFoundException e) {
+    public String handleBookNotFound(BookNotFoundException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_04",
-                e.getMessage()
+                4, e.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
     }
 
     // 5. 대출 기록 찾을 수 없음
     @ExceptionHandler(LoanNotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleLoanNotFound(LoanNotFoundException e) {
+    public String handleLoanNotFound(LoanNotFoundException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_05",
-                e.getMessage()
+                5, e.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
     }
 
     // 6. 예약 기록 찾을 수 없음
     @ExceptionHandler(ReservationNotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleReservationNotFound(ReservationNotFoundException e) {
+    public String handleReservationNotFound(ReservationNotFoundException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_06",
-                e.getMessage()
+                6, e.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
     }
 
     // 7. 선순위 예약자 존재
     @ExceptionHandler(PriorReservationExistsException.class)
-    public ResponseEntity<ErrorResponseDTO> handlePriorReservationExists(PriorReservationExistsException e) {
+    public String handlePriorReservationExists(PriorReservationExistsException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_07",
-                e.getMessage()
+                7, e.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+        // return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
     }
 
     // 8. 대출이 허용되지 않음
     @ExceptionHandler(UnavailableBorrowedException.class)
-    public ResponseEntity<ErrorResponseDTO> handleUnavailableBorrowed(UnavailableBorrowedException e) {
+    public String handleUnavailableBorrowed(UnavailableBorrowedException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_08",
-                e.getMessage()
+                8, e.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
     }
 
     // 9. 예약이 허용되지 않음
     @ExceptionHandler(UnavailableReservationException.class)
-    public ResponseEntity<ErrorResponseDTO> handleUnavailableReservation(UnavailableBorrowedException e) {
+    public String handleUnavailableReservation(UnavailableBorrowedException e, RedirectAttributes redirectAttributes) {
         ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                "ERROR_CODE_09",
-                e.getMessage()
+                9, e.getMessage()
         );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
     }
 
+    // 10. (관리자) 이미지 저장 중 에러가 발생함
+    @ExceptionHandler(ImageSaveException.class)
+    public String handleImageSaveError(ImageSaveException e, RedirectAttributes redirectAttributes) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                10, e.getMessage()
+        );
+        // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
+    }
+
+    // 11. (관리자) 입력값 검증 오류
+    @ExceptionHandler(AdminValidationException.class)
+    public String handleInvalidInput(AdminValidationException e, RedirectAttributes redirectAttributes) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                11, e.getMessage()
+        );
+        // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        redirectAttributes.addFlashAttribute(errorResponse);
+        return "redirect:/error";
+    }
 
 
 
@@ -127,14 +157,4 @@ public class GlobalExceptionHandler {
     public String handleGeneralException(Exception e) {
         return "권한이 없습니다. (" + e + ")";
     }
-
-    /*  이건 뷰 네임으로 반환하는 방법
-    @ExceptionHandler(InvalidPasswordException.class)
-    public String handleInvalidPasswordException(InvalidPasswordException ex, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("message", ex.getMessage());
-        // return "redirect:/edit-post";
-        return "views/error";
-    }
-    * */
-
 }

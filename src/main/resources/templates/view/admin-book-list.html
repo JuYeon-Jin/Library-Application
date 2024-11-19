@@ -1,10 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>관리자-책등록</title>
+    <title>도서관리</title>
+    <link rel="stylesheet" href="/css/admin-style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.css">
+    <script>
+        /**
+         * URL 에 페이지 파라미터를 추가하여 이동합니다.
+         * 만약 파라미터에 검색어가 있는 상태라면 검색 파라미터를 유지한 채 페이지 파라미터를 추가합니다.
+         *
+         * @param {number} newPage - 이동하려는 페이지 번호.
+         */
+        function changePage(newPage) {
+            const baseUrl = "/admin/library";
+            const params = new URLSearchParams(window.location.search);
+
+            params.set("page", String(newPage));
+
+            window.location.href = `${baseUrl}?${params.toString()}`;
+        }
+    </script>
 </head>
 <body>
-책 목록
+
+<div class="container">
+    <div class="header">
+        도서관리 어플리케이션
+        <nav>
+            <ul>
+                <li><a class="active">⚙️도서 관리</a></li>
+                <li class="for-not-yet"><a>사용자 관리</a></li>
+                <img src="/img/caution.png" alt="warn image" class="not-yet1" >
+                <img src="/img/caution.png" alt="warn image" class="not-yet2" >
+            </ul>
+        </nav>
+    </div>
+    <div class="main-container">
+        <div class="container-border">
+
+            <form action="/admin/book" method="POST" enctype="multipart/form-data" onsubmit="return validateRegistration()" class="book-insert-form">
+                <div class="regi-book-img-area">
+                    <div id="regiBookImg" class="regi-book-img">
+                        <div id="imgButton" class="circle-button">+</div>
+                    </div>
+                    <div id="croppedImageContainer">
+                        <img id="croppedPreview" alt="편집된 이미지">
+                    </div>
+                    <input type="file" id="imgFile" name="bookImage" accept="image/png, image/jpeg">
+                </div>
+                <div class="regi-book-info-area">
+                    <div class="regi-book-info-item"><span>도서명</span><input type="text" name="bookName" maxlength="70" required></div>
+                    <div class="regi-book-info-item"><span>저자</span><input type="text" name="author" maxlength="25" required></div>
+                    <div class="regi-book-info-item"><span>출판사</span><input type="text" name="publisher" maxlength="15" required></div>
+                    <div class="regi-book-info-item"><span>출판일</span><input type="date" id="publishedAt" name="publishedAt" required></div>
+                </div>
+                <div class="regi-book-btn-area">
+                    <button class="regi-book-btn">등록</button>
+                </div>
+            </form>
+
+            <div class="book-list-area">
+                <form action="/admin/library" method="GET" onsubmit="return searchValidate()" class="search-book">
+                    <input id="keyword" name="keyword" maxlength="25" placeholder="도서명을 입력하세요." required>
+                    <button type="submit">검색</button>
+                </form>
+                <div class="book-list">
+                    <div class="book-list-head">
+                        <span>번호</span>
+                        <span>제목</span>
+                        <span>저자</span>
+                        <span>출판일</span>
+                        <span>출판사</span>
+                    </div>
+                    <div th:each="book, i : ${books}" class="book-list-body">
+                        <span th:text="${pagination.totalPosts - (pagination.currentPage - 1) * 7 - i.index}"></span>
+                        <span th:text="${book.bookName}" class="left-text long-text"></span>
+                        <span th:text="${book.author}" class="long-text"></span>
+                        <span th:text="${book.publishedAt}"></span>
+                        <span th:text="${book.publisher}"></span>
+                    </div>
+
+
+                    <div th:if="${#lists.isEmpty(books)}" class="no-book-result">
+                        <img src="/img/no-result.png" alt="warn image" class="no-result-img" >
+                        <span>' <span th:text="${keyword}"></span> ' 도서 검색 결과가 없습니다.</span>
+                        <span>검색어의 철자가 정확한지 다시 한 번 확인해주세요.</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="pagination">
+                <button class="page-jump" disabled>◀</button>
+                <button th:each="i : ${#numbers.sequence(pagination.startPage, pagination.endPage)}"
+                        th:classappend="${i == pagination.currentPage} ? 'active'"
+                        th:text="${i}"
+                        th:onclick="'changePage(' + ${i} + ')'"
+                ></button>
+                <button class="page-jump" disabled>▶</button>
+            </div>
+
+            <div id="imageEditorModal">
+                <div class="edit-modal">
+                    <span>✂️ 이미지 편집</span>
+                    <div>
+                        <img id="imagePreview" alt="편집할 이미지">
+                    </div>
+                    <div>
+                        <button id="confirmButton" style="margin-top: 10px;">완료</button>
+                        <button id="cancelButton" style="margin-top: 10px;">취소</button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- large-container-outline -->
+    </div><!-- main-container -->
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
+<script>
+    let cropper;
+    const imgButton = document.getElementById('imgButton');
+    const imgFileInput = document.getElementById('imgFile');
+    const imagePreview = document.getElementById('imagePreview');
+    const imageEditorModal = document.getElementById('imageEditorModal');
+    const croppedImageContainer = document.getElementById('croppedImageContainer');
+    const confirmButton = document.getElementById('confirmButton');
+    const cancelButton = document.getElementById('cancelButton');
+    const regiBookImg = document.getElementById('regiBookImg');
+
+
+    /**
+     * <div id="imgButton">+</div> 이 영역을 클릭하면
+     * <input type="file" id="imgFile"> 이 FILE INPUT 을 클릭한 것처럼 보이게 합니다.
+     */
+    imgButton.addEventListener('click', () => {
+        imgFileInput.click();
+    });
+
+
+    /**
+     * 사용자가 파일 입력 필드에서 이미지를 선택했을 때 실행되는 이벤트 핸들러입니다.
+     * 선택된 이미지를 Cropper.js 라이브러리를 사용하여 편집할 수 있도록 준비하고, 이미지 편집 모달을 표시합니다.
+     *
+     * @event change - 사용자가 파일 입력값을 변경했을 때 (즉, 파일을 선택했을 때) 발생하는 이벤트입니다.
+     *
+     * 함수 동작 설명:
+     * 1. 파일 접근:
+     *      - 입력 필드의 `files` 속성에서 첫 번째 파일(`files[0]`)을 가져옵니다.
+     *      - 파일이 선택되지 않은 경우에는 아무 작업도 수행하지 않고 함수를 종료합니다.
+     * 2. 이미지 읽기 및 미리보기:
+     *      - `FileReader` 객체를 생성하여 파일을 Data URL 로 읽어들입니다.
+     *      - 파일이 성공적으로 읽히면 이미지 편집 모달(`imageEditorModal`) 을 display 'flex' 로 변경하고
+     *        그 안에 (`reader.onload` 이벤트 발생) `imagePreview` 에 이미지를 렌더링합니다.
+     * 3. Cropper.js 초기화:
+     *      - 새로운 Cropper.js 인스턴스를 생성하여 사용자가 이미지를 편집할 수 있도록 설정합니다.
+     *        이 때, 이전에 생성된 Cropper.js 인스턴스가 있으면 이를 제거(destroy)합니다.
+     *        ※ `aspectRatio`: 잘라낼 영역의 가로 세로 비율을 설정합니다 (1:√2, A4 비율)
+     *        ※ `viewMode`: 이미지가 잘라낼 박스 안에서 어떻게 표시되는지 설정합니다 (모드 1은 이미지 이동 및 확대/축소 허용).
+     * 4. 파일을 Data URL 로 읽기:
+     *      - `reader.readAsDataURL(file)`을 호출하여 파일을 Base64 형식의 Data URL 으로 반환합니다.
+     *        읽기 결과는 `reader.onload` 콜백 함수로 전달됩니다.
+     */
+    imgFileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                imagePreview.src = reader.result;
+                imageEditorModal.style.display = 'flex';
+
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(imagePreview, {
+                    aspectRatio: 1 / Math.sqrt(2),
+                    viewMode: 1,
+                });
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+    // TODO [공부] readAsDataURL 에서 onload 로 전달되는 순서 이해 안가는거 (비동기, 콜백)
+    // TODO [공부] <input type="file"> 요소의 files 속성은 읽기 전용 / file 을 직접 변경하려고 하면 오류가 발생 → DataTransfer 사용
+
+
+
+    /**
+     * 사용자가 이미지를 편집한 후, 확인 버튼을 클릭하면 실행되는 함수입니다.
+     * 1. 업로드된 이미지 파일의 확장자가 `PNG`, `JPG`, `JPEG`인지를 확인합니다.
+     * 2. 이미지를 크롭하여, canvas 를 595x842(A4) 크기에 맞춰 생성합니다.
+     * 3. canvas 를 Blob 형식으로 변환하여 크기와 용량을 확인하고 새로운 File 객체를 생성합니다.
+     * 4. 새로운 File 객체를 DataTransfer 를 사용하여 `imgFileInput`에 다시 설정합니다.
+     * 5. Blob 을 URL 로 변환하여 미리보기 이미지를 업데이트합니다
+     *
+     * @event confirmButton.addEventListener('click')
+     */
+    confirmButton.addEventListener('click', () => {
+
+        const fileExtension = imgFileInput.files[0].name.split('.').pop().toLowerCase();
+        if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg') {
+            alert('PNG 또는 JPG 형식의 파일만 업로드할 수 있습니다.');
+            imageEditorModal.style.display = 'none';
+            imgFileInput.value = "";
+            return;
+        }
+
+        const canvas = cropper.getCroppedCanvas({ width: 595, height: 842 });
+        const mimeType = fileExtension === 'png' ? 'image/png' : 'image/jpeg';
+
+        canvas.toBlob((blob) => {
+            if (blob.size > 2 * 1024 * 1024) {
+                alert("2MB 를 초과하는 이미지는 업로드 할 수 없습니다.");
+            }
+            const croppedFile = new File([blob], imgFileInput.files[0].name, { type: mimeType });
+
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(croppedFile);
+            imgFileInput.files = dataTransfer.files;
+
+            const croppedUrl = URL.createObjectURL(blob);
+            croppedPreview.src = croppedUrl;
+        });
+
+        croppedImageContainer.style.display = 'flex';
+        imageEditorModal.style.display = 'none';
+        regiBookImg.style.display = 'none';
+    });
+
+
+
+    /**
+     * 사용자가 이미지를 편집하다 취소했을 때 모달을 닫고 파일 선택을 초기화합니다.
+     */
+    cancelButton.addEventListener('click', () => {
+        imageEditorModal.style.display = 'none';
+        imgFileInput.value = "";
+    });
+
+</script>
+<script>
+    // toISOString(): ISO 8601 형식(UTC 기준)으로 변환 → 그리니치 천문대를 기준으로 하기 때문에 사용자 로컬 날짜를 사용한다.
+    // .split('T')[0]: YYYY-MM-DD 형식으로 변환
+
+    /**
+     * 현재 날짜를 기준으로 설정 가능한 최대 출판일을 찾습니다.
+     *
+     * 1. `isoDate`: 현재 날짜를 ISO 8601 형식(UTC)으로 변환한 후, 'T'를 기준으로 날짜 부분만 추출합니다.
+     * 2. `localDateString`: 로컬 시간대를 기준으로 현재 날짜를 `YYYY-MM-DD` 형식으로 생성합니다.
+     * 3. `document.getElementById('publishedAt').setAttribute`
+     *      : 출판일에 `max` 속성값을 설정하여, 사용자가 선택할 수 있는 날짜 범위를 제한합니다.
+     *
+     * 기본적으로 로컬 날짜를 사용하고, 날짜가 2일 이상 차이나면 UTC 기준의 날짜를 사용합니다.
+     */
+    const isoDate = new Date().toISOString().split('T')[0];
+    const localDate = new Date();
+    const localDateString = localDate.getFullYear() + '-' +
+        (localDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+        localDate.getDate().toString().padStart(2, '0');
+
+    document.getElementById('publishedAt').setAttribute('max',
+        Math.abs(new Date(localDateString) - new Date(isoDate)) >= 2 * 24 * 60 * 60 * 1000 ? isoDate : localDateString);
+
+
+
+    /**
+     * 검색 요청시 검색어 입력값이 비어있지 않은지 검증합니다.
+     *
+     * @returns {boolean} 검색어가 비어있지 않으면 `true`, 비어있으면 `false`
+     */
+    function searchValidate() {
+        return;
+        const keyword = document.getElementById('keyword');
+        if (keyword.value.trim() === '') {
+            alert('검색어를 입력해 주세요.');
+            return false;
+        }
+        return true;
+    }
+
+
+
+    /**
+     * 도서 등록 폼의 유효성을 검사합니다. 모든 항목이 입력되어야만 true 를 반환합니다.
+     *
+     * @returns {boolean} 모든 입력값이 유효하면 `true`, 그렇지 않으면 `false`
+     */
+    function validateRegistration() {
+        const bookName = document.querySelector('input[name="bookName"]');
+        if (!validateField(bookName)) return false;
+
+        const author = document.querySelector('input[name="author"]');
+        if (!validateField(author)) return false;
+
+        const publisher = document.querySelector('input[name="publisher"]');
+        if (!validateField(publisher)) return false;
+
+        const publishedAt = document.querySelector('input[name="publishedAt"]');
+        if (!validateField(publishedAt)) return false;
+
+        const imgFile = document.getElementById('imgFile');
+        if (!imgFile.files.length) {
+            alert('책 이미지를 선택해 주세요.');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 입력 필드가 비어있는지 체크하는 함수
+     * @param {HTMLElement} inputElement - 검증할 input 요소
+     * @returns {boolean} 입력값이 비어 있으면 `false`, 그렇지 않으면 `true`
+     */
+    function validateField(inputElement) {
+        if (inputElement.value.trim() === '') {
+            alert('모든 항목을 입력해주세요.');
+            inputElement.focus();
+            return false;
+        }
+        return true;
+    }
+
+</script>
 </body>
 </html>

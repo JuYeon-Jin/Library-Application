@@ -56,9 +56,8 @@ public class ReservationService {
      * @param bookId 예약하려는 도서의 고유 아이디
      * @throws UserNotFoundException 해당 사용자가 존재하지 않는 경우
      * @throws BookNotFoundException 해당 책이 존재하지 않는 경우
-     * @throws UnavailableBorrowedException 예약이 불가능한 도서일 경우 (대출이 가능한 상태의 도서)
-     * @throws UnavailableBorrowedException 사용자가 이미 대출 중인 도서일 경우
-     * @throws UnavailableReservationException 사용자가 이미 예약 중인 도서일 경우
+     * @throws UnavailableReservationException 최대 예약 갯수를 초과한 경우, 예약이 불가능(대출이 가능한 상태)한 도서일 경우,
+     *                                         사용자가 이미 대출 중인 도서일 경우, 사용자가 이미 예약 중인 도서일 경우
      */
     public void reservationBook(String userId, int bookId) {
 
@@ -67,9 +66,15 @@ public class ReservationService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new BookNotFoundException("해당 책을 찾을 수 없습니다."));
 
+
+        long userReservationCount = reservationRepository.countByUser_UserId(userId);
+        if (userReservationCount >= 6) {
+            throw new UnavailableReservationException("예약은 최대 6권까지 가능합니다.");
+        }
+
         boolean isBookAvailable = loanRepository.isReservationProhibited(bookId);
         if (isBookAvailable) {
-            throw new UnavailableBorrowedException("이 도서는 현재 대출 가능하기 때문에 예약할 수 없습니다.");
+            throw new UnavailableReservationException("이 도서는 현재 대출 가능하기 때문에 예약할 수 없습니다.");
         }
 
         boolean alreadyBorrowed = loanRepository.existsByBook_BookIdAndUser_UserIdAndIsReturnedFalse(bookId, userId);

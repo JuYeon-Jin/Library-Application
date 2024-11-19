@@ -1,7 +1,5 @@
 package com.group.libraryapp.project.domain.reservation;
 
-import com.group.libraryapp.project.dto.book.BookListDTO;
-import com.group.libraryapp.project.dto.loan.BorrowedBookDTO;
 import com.group.libraryapp.project.dto.reservation.ReservedBookDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,18 +22,23 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
      */
     @Query(value = """
         SELECT new com.group.libraryapp.project.dto.reservation.ReservedBookDTO(
-            r.reservationId, r.book.bookId, b.bookName, b.publisher, b.imgPath, r.reservedAt,
-            (SELECT COUNT(r2) + 1
+            r.reservationId, r.book.bookId, b.bookName, b.publisher, b.imgPath, r.reservedAt, lh.isReturned,
+            (SELECT COUNT(r2) + 0
              FROM Reservation r2
              WHERE r2.book.bookId = r.book.bookId
              AND r2.reservedAt < r.reservedAt)
         )
         FROM Reservation r
-        JOIN r.book b
+            JOIN r.book b
+            LEFT JOIN LoanHistory lh ON lh.book.bookId = r.book.bookId
+                AND lh.loanId = (SELECT MAX(lh2.loanId)
+                                 FROM LoanHistory lh2
+                                 WHERE lh2.book.bookId = r.book.bookId)
         WHERE r.user.userId = :inputUserId
         ORDER BY r.reservationId
     """)
     List<ReservedBookDTO> listMyReservedBooks(@Param("inputUserId") String userId);
+    // TODO [공부] COUNT(r2) + 0 에서 +0 을 빼면 난리남.
 
 
 
@@ -80,17 +83,26 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     Optional<Reservation> findByReservationIdAndUser_UserId(int reservationId, String userId);
 
     /* TODO [공부] Optional<Reservation> 과 Reservation 의 차이
-
     - Optional<Reservation>  → orElseThrow 가능, 널 포인터 예외 방지, 약간의 오버헤드
     Reservation reservation = reservationRepository.findByIdAndUser_UserId(reservationId, userId)
             .orElseThrow(() -> new RuntimeException("Reservation not found or you are not authorized to cancel it"));
-
     - Reservation → orElseThrow 불가능, 불필요한 객체 래핑 방지, NullPointerException 위험
     Reservation reservation = reservationRepository.findByIdAndUser_UserId(reservationId, userId);
     if (reservation == null) {
         throw new RuntimeException("Reservation not found or you are not authorized to cancel it");
     }
     * */
+
+
+
+    /**
+     * 특정 사용자가 예약한 도서의 총 개수를 반환합니다.
+     * 사용자가 현재 예약 중인 도서가 몇 권인지 확인하는 데 사용합니다.
+     *
+     * @param userId 예약 도서 수를 확인하려는 사용자의 고유 ID
+     * @return 사용자가 예약한 도서의 총 개수
+     */
+    long countByUser_UserId(String userId);
 
 
 
